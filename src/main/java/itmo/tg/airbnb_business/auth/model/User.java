@@ -1,4 +1,4 @@
-package itmo.tg.airbnb_business.model;
+package itmo.tg.airbnb_business.auth.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;

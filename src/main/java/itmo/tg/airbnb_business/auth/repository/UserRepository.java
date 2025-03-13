@@ -1,6 +1,6 @@
-package itmo.tg.airbnb_business.repository;
+package itmo.tg.airbnb_business.auth.repository;
 
-import itmo.tg.airbnb_business.model.User;
+import itmo.tg.airbnb_business.auth.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
