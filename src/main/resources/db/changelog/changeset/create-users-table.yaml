@@ -12,7 +12,7 @@ databaseChangeLog:
                                     constraints:
                                         primaryKey: true
                             -   column:
-                                    name: name
+                                    name: username
                                     type: text
                                     constraints:
                                         unique: true
