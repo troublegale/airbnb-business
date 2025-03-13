@@ -1,0 +1,26 @@
+volumes:
+    postgresql_data:
+
+services:
+    blps-database:
+        image: postgres:17-alpine
+        ports:
+            - "5665:5665"
+        volumes:
+            - postgresql_data:/var/lib/postgresql/data
+        environment:
+            - PGPORT=5665
+            - POSTGRES_DB=postgres
+            - POSTGRES_USER=postgres
+            - POSTGRES_PASSWORD=postgres
+        container_name: blps-database
+
+    blps-app:
+        build: .
+        env_file:
+            - .env
+        ports:
+            - "8484:8484"
+        depends_on:
+            - blps-database
+        container_name: blps-app
