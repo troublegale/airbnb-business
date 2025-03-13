@@ -1,4 +1,4 @@
-package itmo.tg.airbnb_business.auth.exception;
+package itmo.tg.airbnb_business.auth.exception.exceptions;
 
 public class UsernameTakenException extends RuntimeException {
 

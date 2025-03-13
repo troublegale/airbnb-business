@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -26,11 +27,15 @@ public class AuthenticationService {
                 .password(passwordEncoder.encode(request.password()))
                 .role(Role.ROLE_USER)
                 .build();
+        userService.create(user);
         String token = jwtService.generateToken(user);
         return new AuthResponse(user.getUsername(), token, Role.ROLE_USER);
     }
 
     public AuthResponse signIn(AuthRequest request) {
+        if (!userService.existsByUsername(request.username())) {
+            throw new UsernameNotFoundException(String.format("User %s not found", request.username()));
+        }
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                 request.username(), request.password()
         ));
