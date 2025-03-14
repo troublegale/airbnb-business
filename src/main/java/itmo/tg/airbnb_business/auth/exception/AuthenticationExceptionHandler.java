@@ -3,6 +3,7 @@ package itmo.tg.airbnb_business.auth.exception;
 import itmo.tg.airbnb_business.auth.exception.exceptions.UsernameTakenException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -23,6 +24,12 @@ public class AuthenticationExceptionHandler {
     @ResponseStatus(HttpStatus.FORBIDDEN)
     public ResponseEntity<String> handleUsernameNotFoundException(UsernameNotFoundException e) {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ResponseEntity<String> handleBadCredentialsException(BadCredentialsException ignored) {
+        return new ResponseEntity<>("Wrong password", HttpStatus.FORBIDDEN);
     }
 
 }
