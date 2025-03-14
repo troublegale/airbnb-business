@@ -1,10 +1,10 @@
 databaseChangeLog:
 - changeSet:
-    id: create-users-table
+    id: create-fines-table
     author: tg
     changes:
     - createTable:
-        tableName: users
+        tableName: fines
         columns:
         - column:
             name: id
@@ -12,18 +12,20 @@ databaseChangeLog:
             constraints:
               primaryKey: true
         - column:
-            name: username
-            type: text
-            constraints:
-              unique: true
-              nullable: false
-        - column:
-            name: password
-            type: text
+            name: user_id
+            type: int
             constraints:
               nullable: false
+              foreignKeyName: fk_fine_user
+              references: users(id)
         - column:
-            name: role
+            name: amount
+            type: int
+            constraints:
+              nullable: false
+              checkConstraint: CHECK (amount > 0)
+        - column:
+            name: status
             type: text
             constraints:
               nullable: false

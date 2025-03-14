@@ -1,10 +1,10 @@
 databaseChangeLog:
 - changeSet:
-    id: create-users-table
+    id: create-advertisement-blocks-table
     author: tg
     changes:
     - createTable:
-        tableName: users
+        tableName: advertisement_blocks
         columns:
         - column:
             name: id
@@ -12,18 +12,14 @@ databaseChangeLog:
             constraints:
               primaryKey: true
         - column:
-            name: username
-            type: text
-            constraints:
-              unique: true
-              nullable: false
-        - column:
-            name: password
-            type: text
+            name: advertisement_id
+            type: int
             constraints:
               nullable: false
+              foreignKeyName: fk_block_advertisement
+              references: advertisements(id)
         - column:
-            name: role
-            type: text
+            name: date_until
+            type: date
             constraints:
               nullable: false
