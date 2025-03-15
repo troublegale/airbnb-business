@@ -27,7 +27,7 @@ databaseChangeLog:
             type: int
             constraints:
               nullable: false
-              checkConstraint: CHECK (boor_price > 0)
+              checkConstraint: CHECK (book_price > 0)
         - column:
             name: price_per_night
             type: int

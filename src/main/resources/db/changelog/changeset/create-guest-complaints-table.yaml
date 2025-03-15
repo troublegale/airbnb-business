@@ -24,7 +24,7 @@ databaseChangeLog:
             constraints:
               nullable: false
               foreignKeyName: fk_guest_complaint_advertisement
-              references: advertisements_id
+              references: advertisements(id)
         - column:
             name: booking_id
             type: int

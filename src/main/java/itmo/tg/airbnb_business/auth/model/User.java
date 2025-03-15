@@ -16,9 +16,9 @@ import java.util.List;
 @Entity
 @Table(name = "users")
 @Data
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class User implements UserDetails {
 
     @Id
@@ -26,15 +26,13 @@ public class User implements UserDetails {
     private Integer id;
 
     @Column(name = "username", unique = true, nullable = false)
-    @NotNull
     private String username;
 
     @Column(name = "password", nullable = false)
-    @NotNull
     private String password;
 
     @Column(name = "role", nullable = false)
-    @NotNull
+    @Enumerated(EnumType.STRING)
     private Role role;
 
     @Override
