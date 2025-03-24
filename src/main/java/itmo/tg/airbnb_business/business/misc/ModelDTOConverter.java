@@ -4,6 +4,8 @@ import itmo.tg.airbnb_business.business.dto.AdvertisementRequestDTO;
 import itmo.tg.airbnb_business.business.dto.AdvertisementResponseDTO;
 import itmo.tg.airbnb_business.business.model.Advertisement;
 
+import java.util.List;
+
 public class ModelDTOConverter {
 
     public static Advertisement convert(AdvertisementRequestDTO dto) {
@@ -25,6 +27,10 @@ public class ModelDTOConverter {
                 .status(advertisement.getStatus())
                 .hostUsername(advertisement.getHost().getUsername())
                 .build();
+    }
+
+    public static List<AdvertisementResponseDTO> toAdvertisementDtoList(List<Advertisement> adverts) {
+        return adverts.stream().map(ModelDTOConverter::convert).toList();
     }
 
 }
