@@ -29,7 +29,7 @@ public class ModelDTOConverter {
                 .build();
     }
 
-    public static List<AdvertisementResponseDTO> toAdvertisementDtoList(List<Advertisement> adverts) {
+    public static List<AdvertisementResponseDTO> toAdvertisementDTOList(List<Advertisement> adverts) {
         return adverts.stream().map(ModelDTOConverter::convert).toList();
     }
 

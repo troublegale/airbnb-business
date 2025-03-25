@@ -10,6 +10,7 @@ import itmo.tg.airbnb_business.business.model.enums.AdvertisementStatus;
 import itmo.tg.airbnb_business.business.repository.AdvertisementRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -28,9 +29,10 @@ public class AdvertisementService {
 
     public List<AdvertisementResponseDTO> getAll() {
         var adverts = advertisementRepository.findAll();
-        return ModelDTOConverter.toAdvertisementDtoList(adverts);
+        return ModelDTOConverter.toAdvertisementDTOList(adverts);
     }
 
+    @Transactional
     public AdvertisementResponseDTO create(AdvertisementRequestDTO dto, User host) {
         var advert = ModelDTOConverter.convert(dto);
         advert.setStatus(AdvertisementStatus.ACTIVE);
@@ -39,6 +41,7 @@ public class AdvertisementService {
         return ModelDTOConverter.convert(advert);
     }
 
+    @Transactional
     public AdvertisementResponseDTO update(Integer id, AdvertisementRequestDTO dto, User host) {
         var advert = advertisementRepository.findById(id).orElseThrow(() ->
                 new NoSuchElementException("Advertisement #" + id + " not found"));
@@ -53,6 +56,7 @@ public class AdvertisementService {
         throw new NotAllowedException("Not allowed to update advertisement #" + advert.getId());
     }
 
+    @Transactional
     public void delete(Integer id, User host) {
         var advert = advertisementRepository.findById(id).orElseThrow(() ->
                 new NoSuchElementException("Advertisement #" + id + " not found"));

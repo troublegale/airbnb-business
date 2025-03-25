@@ -8,6 +8,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+
 @Entity
 @Table(name = "guest_complaints")
 @Data
@@ -34,6 +36,9 @@ public class GuestComplaint {
 
     @Column(name = "proof_link", nullable = false)
     private String proofLink;
+
+    @Column(name = "date", nullable = false)
+    private LocalDate date;
 
     @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)

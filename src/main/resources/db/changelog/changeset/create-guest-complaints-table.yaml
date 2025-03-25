@@ -38,6 +38,11 @@ databaseChangeLog:
             constraints:
               nullable: false
         - column:
+            name: date
+            type: date
+            constraints:
+              nullable: false
+        - column:
             name: status
             type: text
             constraints:
