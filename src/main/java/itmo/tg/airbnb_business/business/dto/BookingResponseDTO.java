@@ -14,9 +14,9 @@ import java.time.LocalDate;
 @Builder
 public class BookingResponseDTO {
 
-    private Integer id;
+    private Long id;
 
-    private Integer advertisementId;
+    private Long advertisementId;
 
     private String guestUsername;
 

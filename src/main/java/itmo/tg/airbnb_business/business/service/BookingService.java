@@ -3,10 +3,7 @@ package itmo.tg.airbnb_business.business.service;
 import itmo.tg.airbnb_business.auth.model.User;
 import itmo.tg.airbnb_business.business.dto.BookingRequestDTO;
 import itmo.tg.airbnb_business.business.dto.BookingResponseDTO;
-import itmo.tg.airbnb_business.business.exception.exceptions.AdvertisementBlockedException;
-import itmo.tg.airbnb_business.business.exception.exceptions.BookOwnAdvertisementException;
-import itmo.tg.airbnb_business.business.exception.exceptions.BookingDatesConflictException;
-import itmo.tg.airbnb_business.business.exception.exceptions.InvalidBookingDatesException;
+import itmo.tg.airbnb_business.business.exception.exceptions.*;
 import itmo.tg.airbnb_business.business.misc.ModelDTOConverter;
 import itmo.tg.airbnb_business.business.model.Booking;
 import itmo.tg.airbnb_business.business.model.enums.AdvertisementStatus;
@@ -30,7 +27,9 @@ public class BookingService {
     private final AdvertisementBlockRepository advertisementBlockRepository;
     private final BookingRepository bookingRepository;
 
-    public BookingResponseDTO get(Integer id) {
+    private final PenaltyService penaltyService;
+
+    public BookingResponseDTO get(Long id) {
         var booking = bookingRepository.findById(id).orElseThrow(() ->
                 new NoSuchElementException("Booking #" + id + " not found"));
         return ModelDTOConverter.convert(booking);
@@ -41,12 +40,12 @@ public class BookingService {
         return ModelDTOConverter.toBookingDTOList(bookings);
     }
 
-    public List<BookingResponseDTO> getOwned(User guest, Boolean active) {
+    public List<BookingResponseDTO> getOwned(User guest, Boolean showAll) {
         List<Booking> bookings;
-        if (active) {
-            bookings = bookingRepository.findByGuestAndStatus(guest, BookingStatus.ACTIVE);
-        } else {
+        if (showAll) {
             bookings = bookingRepository.findByGuest(guest);
+        } else {
+            bookings = bookingRepository.findByGuestAndStatus(guest, BookingStatus.ACTIVE);
         }
         return ModelDTOConverter.toBookingDTOList(bookings);
     }
@@ -79,6 +78,37 @@ public class BookingService {
         booking.setStatus(BookingStatus.ACTIVE);
         bookingRepository.save(booking);
         return ModelDTOConverter.convert(booking);
+
+    }
+
+    @Transactional
+    public String cancel(Long id, User user) {
+
+        var booking = bookingRepository.findById(id).orElseThrow(() ->
+                new NoSuchElementException("Booking #" + id + " not found"));
+
+        if (!booking.getGuest().equals(user) && !booking.getAdvertisement().getHost().equals(user)) {
+            throw new NotAllowedException("Not allowed to cancel booking #" + id);
+        }
+
+        if (booking.getStatus() != BookingStatus.ACTIVE) {
+            throw new NotAllowedException("Booking #" + id + " is already cancelled or expired");
+        }
+
+        if (booking.getGuest().equals(user)) {
+            booking.setStatus(BookingStatus.CANCELLED);
+            bookingRepository.save(booking);
+            return "You cancelled booking #" + id + " as a guest";
+        }
+
+        var advert = booking.getAdvertisement();
+        penaltyService.blockAndAssignFine(
+                advert, booking.getStartDate(), booking.getEndDate(), user);
+        booking.setStatus(BookingStatus.CANCELLED);
+        bookingRepository.save(booking);
+        return "You cancelled booking #" + id + " as a host.\n" +
+                "You were assigned with a fine. Refer to /fines/my\n" +
+                "Your advertisement #" + advert.getId() + " is blocked for booking until " + booking.getEndDate();
 
     }
 

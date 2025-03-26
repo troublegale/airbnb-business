@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 public class HostJustificationRequestDTO {
 
     @NotNull
-    private Integer guestComplaintId;
+    private Long guestComplaintId;
 
     @NotNull
     @NotBlank

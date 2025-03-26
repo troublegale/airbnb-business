@@ -16,13 +16,13 @@ import java.time.LocalDate;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class GuestComplaintResponseDTO {
 
-    private Integer id;
+    private Long id;
 
     private String guestUsername;
 
-    private Integer advertisementId;
+    private Long advertisementId;
 
-    private Integer bookingId;
+    private Long bookingId;
 
     private String proofLink;
 

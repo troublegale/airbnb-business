@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 public class HostDamageComplaintRequestDTO {
 
     @NotNull
-    private Integer bookingId;
+    private Long bookingId;
 
     @NotNull
     @NotBlank
@@ -23,6 +23,6 @@ public class HostDamageComplaintRequestDTO {
 
     @NotNull
     @Positive
-    private Integer compensationAmount;
+    private Double compensationAmount;
 
 }

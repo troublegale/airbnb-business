@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class AdvertisementResponseDTO {
 
-    private Integer id;
+    private Long id;
 
     private String address;
 

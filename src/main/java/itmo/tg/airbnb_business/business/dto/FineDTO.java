@@ -12,9 +12,9 @@ import lombok.NoArgsConstructor;
 @Builder
 public class FineDTO {
 
-    private Integer id;
+    private Long id;
 
-    private Integer amount;
+    private Double amount;
 
     private FineStatus status;
 

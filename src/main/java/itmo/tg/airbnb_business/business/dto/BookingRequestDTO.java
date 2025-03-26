@@ -15,7 +15,7 @@ import java.time.LocalDate;
 public class BookingRequestDTO {
 
     @NotNull
-    private Integer advertisementId;
+    private Long advertisementId;
 
     @NotNull
     private LocalDate startDate;

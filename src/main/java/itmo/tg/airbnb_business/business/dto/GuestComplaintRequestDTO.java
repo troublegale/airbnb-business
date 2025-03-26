@@ -14,10 +14,10 @@ import lombok.NoArgsConstructor;
 public class GuestComplaintRequestDTO {
 
     @NotNull
-    private Integer advertisementId;
+    private Long advertisementId;
 
     @NotNull
-    private Integer bookingId;
+    private Long bookingId;
 
     @NotNull
     @NotBlank

@@ -8,26 +8,26 @@ databaseChangeLog:
         columns:
         - column:
             name: id
-            type: serial
+            type: bigserial
             constraints:
               primaryKey: true
         - column:
             name: guest_id
-            type: int
+            type: bigint
             constraints:
               nullable: false
               foreignKeyName: fk_guest_complaint_guest
               references: users(id)
         - column:
             name: advertisement_id
-            type: int
+            type: bigint
             constraints:
               nullable: false
               foreignKeyName: fk_guest_complaint_advertisement
               references: advertisements(id)
         - column:
             name: booking_id
-            type: int
+            type: bigint
             constraints:
               nullable: false
               foreignKeyName: fk_guest_complaint_booking
@@ -49,7 +49,7 @@ databaseChangeLog:
               nullable: false
         - column:
             name: resolver_id
-            type: int
+            type: bigint
             constraints:
               foreignKeyName: fk_guest_complaint_admin
               references: users(id)

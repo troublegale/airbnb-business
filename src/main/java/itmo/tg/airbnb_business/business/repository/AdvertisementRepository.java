@@ -11,7 +11,7 @@ import java.util.List;
 
 @Repository
 @Transactional
-public interface AdvertisementRepository extends JpaRepository<Advertisement, Integer> {
+public interface AdvertisementRepository extends JpaRepository<Advertisement, Long> {
 
     List<Advertisement> findByHost(User host);
 

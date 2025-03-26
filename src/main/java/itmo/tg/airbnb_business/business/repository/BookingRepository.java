@@ -12,7 +12,7 @@ import java.util.List;
 
 @Repository
 @Transactional
-public interface BookingRepository extends JpaRepository<Booking, Integer> {
+public interface BookingRepository extends JpaRepository<Booking, Long> {
 
     Boolean existsByAdvertisementAndStatus(Advertisement advertisement, BookingStatus status);
 
@@ -24,4 +24,5 @@ public interface BookingRepository extends JpaRepository<Booking, Integer> {
 
     List<Booking> findByGuestAndStatus(User guest, BookingStatus status);
 
+    List<Booking> findByAdvertisement(Advertisement advertisement);
 }

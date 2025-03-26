@@ -14,15 +14,15 @@ import lombok.NoArgsConstructor;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class HostDamageComplaintResponseDTO {
 
-    private Integer id;
+    private Long id;
 
     private String hostUsername;
 
-    private Integer bookingId;
+    private Long bookingId;
 
     private String proofLink;
 
-    private Integer compensationAmount;
+    private double compensationAmount;
 
     private TicketStatus status;
 

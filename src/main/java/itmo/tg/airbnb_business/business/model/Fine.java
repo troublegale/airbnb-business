@@ -18,14 +18,14 @@ public class Fine {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private long id;
 
     @JoinColumn(name = "user_id", nullable = false)
     @ManyToOne
     private User user;
 
     @Column(name = "amount", nullable = false)
-    private int amount;
+    private double amount;
 
     @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)

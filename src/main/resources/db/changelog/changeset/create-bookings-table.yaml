@@ -8,19 +8,19 @@ databaseChangeLog:
         columns:
         - column:
             name: id
-            type: serial
+            type: bigserial
             constraints:
               primaryKey: true
         - column:
             name: advertisement_id
-            type: int
+            type: bigint
             constraints:
               nullable: false
               foreignKeyName: fk_booking_advertisement
               references: advertisements(id)
         - column:
             name: guest_id
-            type: int
+            type: bigint
             constraints:
               nullable: false
               foreignKeyName: fk_booking_guest

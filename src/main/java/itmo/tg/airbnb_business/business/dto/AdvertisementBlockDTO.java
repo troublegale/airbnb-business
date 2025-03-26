@@ -13,7 +13,7 @@ import java.time.LocalDate;
 @Builder
 public class AdvertisementBlockDTO {
 
-    private Integer advertisementId;
+    private Long advertisementId;
 
     private LocalDate dateUntil;
 

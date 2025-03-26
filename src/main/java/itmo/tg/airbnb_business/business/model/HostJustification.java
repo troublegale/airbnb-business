@@ -18,7 +18,7 @@ public class HostJustification {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private long id;
 
     @JoinColumn(name = "host_id", nullable = false)
     @ManyToOne

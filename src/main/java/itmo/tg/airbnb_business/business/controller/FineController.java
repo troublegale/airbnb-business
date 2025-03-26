@@ -25,15 +25,15 @@ public class FineController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<FineDTO> get(@PathVariable Integer id) {
+    public ResponseEntity<FineDTO> get(@PathVariable Long id) {
         var response = fineService.get(id);
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/my")
     public ResponseEntity<List<FineDTO>> getAssigned(
-            @RequestParam(defaultValue = "false") @Valid Boolean active) {
-        var response = fineService.getAssignedTo(userService.getCurrentUser(), active);
+            @RequestParam(defaultValue = "false") @Valid Boolean showAll) {
+        var response = fineService.getAssignedTo(userService.getCurrentUser(), showAll);
         return ResponseEntity.ok(response);
     }
 

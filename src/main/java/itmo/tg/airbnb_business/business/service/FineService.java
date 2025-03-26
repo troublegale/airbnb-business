@@ -18,7 +18,7 @@ public class FineService {
 
     private final FineRepository fineRepository;
 
-    public FineDTO get(Integer id) {
+    public FineDTO get(Long id) {
         var fine = fineRepository.findById(id).orElseThrow(() ->
                 new NoSuchElementException("Fine #" + id + " not found"));
         return ModelDTOConverter.convert(fine);
@@ -29,12 +29,12 @@ public class FineService {
         return ModelDTOConverter.toFineDTOList(fines);
     }
 
-    public List<FineDTO> getAssignedTo(User user, Boolean active) {
+    public List<FineDTO> getAssignedTo(User user, Boolean showAll) {
         List<Fine> fines;
-        if (active) {
-            fines = fineRepository.findByUserAndStatus(user, FineStatus.ACTIVE);
-        } else {
+        if (showAll) {
             fines = fineRepository.findByUser(user);
+        } else {
+            fines = fineRepository.findByUserAndStatus(user, FineStatus.ACTIVE);
         }
         return ModelDTOConverter.toFineDTOList(fines);
     }

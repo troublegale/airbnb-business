@@ -33,13 +33,13 @@ public class BookingController {
 
     @GetMapping("/my")
     public ResponseEntity<List<BookingResponseDTO>> getOwned(
-            @RequestParam(defaultValue = "false") @Valid Boolean active) {
-        var response = bookingService.getOwned(userService.getCurrentUser(), active);
+            @RequestParam(defaultValue = "false") @Valid Boolean showAll) {
+        var response = bookingService.getOwned(userService.getCurrentUser(), showAll);
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<BookingResponseDTO> get(@PathVariable Integer id) {
+    public ResponseEntity<BookingResponseDTO> get(@PathVariable Long id) {
         var response = bookingService.get(id);
         return ResponseEntity.ok(response);
     }
@@ -48,6 +48,12 @@ public class BookingController {
     public ResponseEntity<BookingResponseDTO> create(
             @RequestBody @Valid BookingRequestDTO dto) {
         var response = bookingService.create(dto, userService.getCurrentUser());
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/{id}/cancel")
+    public ResponseEntity<String> cancel(@PathVariable Long id) {
+        var response = bookingService.cancel(id, userService.getCurrentUser());
         return ResponseEntity.ok(response);
     }
 

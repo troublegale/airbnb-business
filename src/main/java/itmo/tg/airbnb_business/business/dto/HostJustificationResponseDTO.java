@@ -14,11 +14,11 @@ import lombok.NoArgsConstructor;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class HostJustificationResponseDTO {
 
-    private Integer id;
+    private Long id;
 
     private String hostUsername;
 
-    private Integer guestComplaintId;
+    private Long guestComplaintId;
 
     private String proofLink;
 

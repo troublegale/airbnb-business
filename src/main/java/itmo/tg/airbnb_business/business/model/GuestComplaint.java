@@ -20,7 +20,7 @@ public class GuestComplaint {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private long id;
 
     @JoinColumn(name = "guest_id", nullable = false)
     @ManyToOne

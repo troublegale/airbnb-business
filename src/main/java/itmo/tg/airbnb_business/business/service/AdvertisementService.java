@@ -4,10 +4,12 @@ import itmo.tg.airbnb_business.auth.model.Role;
 import itmo.tg.airbnb_business.auth.model.User;
 import itmo.tg.airbnb_business.business.dto.AdvertisementRequestDTO;
 import itmo.tg.airbnb_business.business.dto.AdvertisementResponseDTO;
+import itmo.tg.airbnb_business.business.dto.BookingResponseDTO;
 import itmo.tg.airbnb_business.business.exception.exceptions.ActiveBookingsException;
 import itmo.tg.airbnb_business.business.exception.exceptions.NotAllowedException;
 import itmo.tg.airbnb_business.business.misc.ModelDTOConverter;
 import itmo.tg.airbnb_business.business.model.Advertisement;
+import itmo.tg.airbnb_business.business.model.Booking;
 import itmo.tg.airbnb_business.business.model.enums.AdvertisementStatus;
 import itmo.tg.airbnb_business.business.model.enums.BookingStatus;
 import itmo.tg.airbnb_business.business.repository.AdvertisementRepository;
@@ -26,7 +28,7 @@ public class AdvertisementService {
     private final AdvertisementRepository advertisementRepository;
     private final BookingRepository bookingRepository;
 
-    public AdvertisementResponseDTO get(Integer id) {
+    public AdvertisementResponseDTO get(Long id) {
         var advert = advertisementRepository.findById(id).orElseThrow(() ->
                 new NoSuchElementException("Advertisement #" + id + " not found"));
         return ModelDTOConverter.convert(advert);
@@ -35,6 +37,18 @@ public class AdvertisementService {
     public List<AdvertisementResponseDTO> getAll() {
         var adverts = advertisementRepository.findAll();
         return ModelDTOConverter.toAdvertisementDTOList(adverts);
+    }
+
+    public List<BookingResponseDTO> getBookings(Long id, Boolean showAll) {
+        var advert = advertisementRepository.findById(id).orElseThrow(() ->
+                new NoSuchElementException("Advertisement #" + id + " not found"));
+        List<Booking> bookings;
+        if (showAll) {
+            bookings = bookingRepository.findByAdvertisement(advert);
+        } else {
+            bookings = bookingRepository.findByAdvertisementAndStatus(advert, BookingStatus.ACTIVE);
+        }
+        return ModelDTOConverter.toBookingDTOList(bookings);
     }
 
     public List<AdvertisementResponseDTO> getOwned(User host, Boolean active) {
@@ -56,7 +70,7 @@ public class AdvertisementService {
     }
 
     @Transactional
-    public AdvertisementResponseDTO update(Integer id, AdvertisementRequestDTO dto, User host) {
+    public AdvertisementResponseDTO update(Long id, AdvertisementRequestDTO dto, User host) {
         var advert = advertisementRepository.findById(id).orElseThrow(() ->
                 new NoSuchElementException("Advertisement #" + id + " not found"));
         if (advert.getHost().equals(host) || host.getRole() == Role.ROLE_ADMIN) {
@@ -71,7 +85,7 @@ public class AdvertisementService {
     }
 
     @Transactional
-    public void delete(Integer id, User host) {
+    public void delete(Long id, User host) {
         var advert = advertisementRepository.findById(id).orElseThrow(() ->
                 new NoSuchElementException("Advertisement #" + id + " not found"));
         if (!advert.getHost().equals(host) && host.getRole() != Role.ROLE_ADMIN) {

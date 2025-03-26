@@ -18,7 +18,7 @@ public class HostDamageComplaint {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private long id;
 
     @JoinColumn(name = "host_id", nullable = false)
     @ManyToOne
@@ -32,7 +32,7 @@ public class HostDamageComplaint {
     private String proofLink;
 
     @Column(name = "compensation_amount", nullable = false)
-    private int compensationAmount;
+    private double compensationAmount;
 
     @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)

@@ -3,6 +3,7 @@ package itmo.tg.airbnb_business.business.controller;
 import itmo.tg.airbnb_business.auth.service.UserService;
 import itmo.tg.airbnb_business.business.dto.AdvertisementRequestDTO;
 import itmo.tg.airbnb_business.business.dto.AdvertisementResponseDTO;
+import itmo.tg.airbnb_business.business.dto.BookingResponseDTO;
 import itmo.tg.airbnb_business.business.exception.exceptions.ActiveBookingsException;
 import itmo.tg.airbnb_business.business.service.AdvertisementService;
 import jakarta.validation.Valid;
@@ -35,8 +36,15 @@ public class AdvertisementController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<AdvertisementResponseDTO> get(@PathVariable Integer id) {
+    public ResponseEntity<AdvertisementResponseDTO> get(@PathVariable Long id) {
         var response = advertisementService.get(id);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/{id}/bookings")
+    public ResponseEntity<List<BookingResponseDTO>> getBookings(
+            @PathVariable Long id, @RequestParam(defaultValue = "false") @Valid Boolean showAll) {
+        var response = advertisementService.getBookings(id, showAll);
         return ResponseEntity.ok(response);
     }
 
@@ -49,14 +57,14 @@ public class AdvertisementController {
 
     @PutMapping("/{id}/update")
     public ResponseEntity<AdvertisementResponseDTO> update(
-            @PathVariable Integer id,
+            @PathVariable Long id,
             @RequestBody @Valid AdvertisementRequestDTO dto) {
         var response = advertisementService.update(id, dto, userService.getCurrentUser());
         return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{id}/delete")
-    public ResponseEntity<String> delete(@PathVariable Integer id) {
+    public ResponseEntity<String> delete(@PathVariable Long id) {
         advertisementService.delete(id, userService.getCurrentUser());
         return ResponseEntity.ok("Deleted advertisement #" + id);
     }

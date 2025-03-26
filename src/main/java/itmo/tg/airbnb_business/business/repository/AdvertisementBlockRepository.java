@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 @Transactional
-public interface AdvertisementBlockRepository extends JpaRepository<AdvertisementBlock, Integer> {
+public interface AdvertisementBlockRepository extends JpaRepository<AdvertisementBlock, Long> {
 
     AdvertisementBlock findByAdvertisement(Advertisement advertisement);
 
