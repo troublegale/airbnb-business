@@ -3,9 +3,11 @@ package itmo.tg.airbnb_business.business.controller;
 import itmo.tg.airbnb_business.auth.service.UserService;
 import itmo.tg.airbnb_business.business.dto.AdvertisementRequestDTO;
 import itmo.tg.airbnb_business.business.dto.AdvertisementResponseDTO;
+import itmo.tg.airbnb_business.business.exception.exceptions.ActiveBookingsException;
 import itmo.tg.airbnb_business.business.service.AdvertisementService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -57,6 +59,12 @@ public class AdvertisementController {
     public ResponseEntity<String> delete(@PathVariable Integer id) {
         advertisementService.delete(id, userService.getCurrentUser());
         return ResponseEntity.ok("Deleted advertisement #" + id);
+    }
+
+    @ExceptionHandler(ActiveBookingsException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ResponseEntity<String> handleActiveBookingsException(ActiveBookingsException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
     }
 
 }

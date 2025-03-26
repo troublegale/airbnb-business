@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ControllerAdvice
 @ResponseBody
-public class AuthenticationExceptionHandler {
+public class GlobalAuthExceptionHandler {
 
     @ExceptionHandler(UsernameTakenException.class)
     @ResponseStatus(HttpStatus.CONFLICT)

@@ -4,9 +4,14 @@ import itmo.tg.airbnb_business.auth.model.User;
 import itmo.tg.airbnb_business.auth.service.UserService;
 import itmo.tg.airbnb_business.business.dto.BookingRequestDTO;
 import itmo.tg.airbnb_business.business.dto.BookingResponseDTO;
+import itmo.tg.airbnb_business.business.exception.exceptions.AdvertisementBlockedException;
+import itmo.tg.airbnb_business.business.exception.exceptions.BookOwnAdvertisementException;
+import itmo.tg.airbnb_business.business.exception.exceptions.BookingDatesConflictException;
+import itmo.tg.airbnb_business.business.exception.exceptions.InvalidBookingDatesException;
 import itmo.tg.airbnb_business.business.service.BookingService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -46,6 +51,28 @@ public class BookingController {
         return ResponseEntity.ok(response);
     }
 
+    @ExceptionHandler(BookOwnAdvertisementException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ResponseEntity<String> handleBookOwnAdvertisementException(BookOwnAdvertisementException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
+    }
 
+    @ExceptionHandler(BookingDatesConflictException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ResponseEntity<String> handleBookingDatesConflictException(BookingDatesConflictException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(InvalidBookingDatesException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<String> handleInvalidBookingDatesException(InvalidBookingDatesException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(AdvertisementBlockedException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ResponseEntity<String> handleAdvertisementBlockedException(AdvertisementBlockedException ex) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ex.getMessage());
+    }
 
 }

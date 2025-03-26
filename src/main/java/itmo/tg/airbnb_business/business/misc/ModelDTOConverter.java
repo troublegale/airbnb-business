@@ -1,12 +1,10 @@
 package itmo.tg.airbnb_business.business.misc;
 
 import itmo.tg.airbnb_business.auth.model.User;
-import itmo.tg.airbnb_business.business.dto.AdvertisementRequestDTO;
-import itmo.tg.airbnb_business.business.dto.AdvertisementResponseDTO;
-import itmo.tg.airbnb_business.business.dto.BookingRequestDTO;
-import itmo.tg.airbnb_business.business.dto.BookingResponseDTO;
+import itmo.tg.airbnb_business.business.dto.*;
 import itmo.tg.airbnb_business.business.model.Advertisement;
 import itmo.tg.airbnb_business.business.model.Booking;
+import itmo.tg.airbnb_business.business.model.Fine;
 
 import java.util.List;
 
@@ -60,6 +58,19 @@ public class ModelDTOConverter {
 
     public static List<BookingResponseDTO> toBookingDTOList(List<Booking> bookings) {
         return bookings.stream().map(ModelDTOConverter::convert).toList();
+    }
+
+    public static FineDTO convert(Fine fine) {
+        return FineDTO.builder()
+                .id(fine.getId())
+                .amount(fine.getAmount())
+                .status(fine.getStatus())
+                .username(fine.getUser().getUsername())
+                .build();
+    }
+
+    public static List<FineDTO> toFineDTOList(List<Fine> fines) {
+        return fines.stream().map(ModelDTOConverter::convert).toList();
     }
 
 }

@@ -37,6 +37,7 @@ public class StatusUpdater {
     }
 
     private void doStatusUpdate() {
+
         var blocks = advertisementBlockRepository.findAll();
         for (var block : blocks) {
             if (block.getDateUntil().isAfter(LocalDate.now())) {
@@ -54,6 +55,7 @@ public class StatusUpdater {
                 bookingRepository.save(booking);
             }
         }
+
     }
 
 }

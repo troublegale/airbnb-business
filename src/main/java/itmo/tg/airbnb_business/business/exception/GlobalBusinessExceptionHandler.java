@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import java.util.NoSuchElementException;
 
 @ControllerAdvice
-public class BusinessExceptionHandler {
+public class GlobalBusinessExceptionHandler {
 
     @ExceptionHandler(NotAllowedException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
@@ -57,36 +57,6 @@ public class BusinessExceptionHandler {
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(sb.toString());
 
-    }
-
-    @ExceptionHandler(ActiveBookingsException.class)
-    @ResponseStatus(HttpStatus.CONFLICT)
-    public ResponseEntity<String> handleActiveBookingsException(ActiveBookingsException ex) {
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
-    }
-
-    @ExceptionHandler(BookOwnAdvertisementException.class)
-    @ResponseStatus(HttpStatus.CONFLICT)
-    public ResponseEntity<String> handleBookOwnAdvertisementException(BookOwnAdvertisementException ex) {
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
-    }
-
-    @ExceptionHandler(BookingDatesConflictException.class)
-    @ResponseStatus(HttpStatus.CONFLICT)
-    public ResponseEntity<String> handleBookingDatesConflictException(BookingDatesConflictException ex) {
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
-    }
-
-    @ExceptionHandler(InvalidBookingDatesException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<String> handleInvalidBookingDatesException(InvalidBookingDatesException ex) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
-    }
-
-    @ExceptionHandler(AdvertisementBlockedException.class)
-    @ResponseStatus(HttpStatus.FORBIDDEN)
-    public ResponseEntity<String> handleAdvertisementBlockedException(AdvertisementBlockedException ex) {
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ex.getMessage());
     }
 
 }
