@@ -7,7 +7,6 @@ import itmo.tg.airbnb_business.business.dto.BookingRequestDTO;
 import itmo.tg.airbnb_business.business.dto.BookingResponseDTO;
 import itmo.tg.airbnb_business.business.model.Advertisement;
 import itmo.tg.airbnb_business.business.model.Booking;
-import itmo.tg.airbnb_business.business.model.enums.AdvertisementStatus;
 
 import java.util.List;
 

@@ -25,6 +25,13 @@ public class AdvertisementController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/my")
+    public ResponseEntity<List<AdvertisementResponseDTO>> getOwned(
+            @RequestParam(defaultValue = "false") @Valid Boolean active) {
+        var response = advertisementService.getOwned(userService.getCurrentUser(), active);
+        return ResponseEntity.ok(response);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<AdvertisementResponseDTO> get(@PathVariable Integer id) {
         var response = advertisementService.get(id);

@@ -1,5 +1,6 @@
 package itmo.tg.airbnb_business.business.controller;
 
+import itmo.tg.airbnb_business.auth.model.User;
 import itmo.tg.airbnb_business.auth.service.UserService;
 import itmo.tg.airbnb_business.business.dto.BookingRequestDTO;
 import itmo.tg.airbnb_business.business.dto.BookingResponseDTO;
@@ -25,6 +26,13 @@ public class BookingController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/my")
+    public ResponseEntity<List<BookingResponseDTO>> getOwned(
+            @RequestParam(defaultValue = "false") @Valid Boolean active) {
+        var response = bookingService.getOwned(userService.getCurrentUser(), active);
+        return ResponseEntity.ok(response);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<BookingResponseDTO> get(@PathVariable Integer id) {
         var response = bookingService.get(id);
@@ -38,18 +46,6 @@ public class BookingController {
         return ResponseEntity.ok(response);
     }
 
-    @PutMapping("/{id}/update")
-    public ResponseEntity<BookingResponseDTO> update(
-            @PathVariable Integer id,
-            @RequestBody @Valid BookingRequestDTO dto) {
-        var response = bookingService.update(id, dto, userService.getCurrentUser());
-        return ResponseEntity.ok(response);
-    }
 
-    @DeleteMapping("/{id}/delete")
-    public ResponseEntity<String> delete(@PathVariable Integer id) {
-        bookingService.delete(id, userService.getCurrentUser());
-        return ResponseEntity.ok("Deleted booking #" + id);
-    }
 
 }
