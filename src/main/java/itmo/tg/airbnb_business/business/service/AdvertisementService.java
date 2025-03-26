@@ -34,9 +34,8 @@ public class AdvertisementService {
 
     @Transactional
     public AdvertisementResponseDTO create(AdvertisementRequestDTO dto, User host) {
-        var advert = ModelDTOConverter.convert(dto);
+        var advert = ModelDTOConverter.convert(dto, host);
         advert.setStatus(AdvertisementStatus.ACTIVE);
-        advert.setHost(host);
         advertisementRepository.save(advert);
         return ModelDTOConverter.convert(advert);
     }
@@ -53,7 +52,7 @@ public class AdvertisementService {
             advertisementRepository.save(advert);
             return ModelDTOConverter.convert(advert);
         }
-        throw new NotAllowedException("Not allowed to update advertisement #" + advert.getId());
+        throw new NotAllowedException("Not allowed to update advertisement #" + id);
     }
 
     @Transactional
@@ -63,7 +62,7 @@ public class AdvertisementService {
         if (advert.getHost().equals(host) || host.getRole() == Role.ROLE_ADMIN) {
             advertisementRepository.delete(advert);
         }
-        throw new NotAllowedException("Not allowed to delete this advertisement " + advert.getId());
+        throw new NotAllowedException("Not allowed to delete advertisement #" + id);
     }
 
 }

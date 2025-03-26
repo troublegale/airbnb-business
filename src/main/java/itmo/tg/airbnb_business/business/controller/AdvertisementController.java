@@ -49,7 +49,7 @@ public class AdvertisementController {
     @DeleteMapping("/{id}/delete")
     public ResponseEntity<String> delete(@PathVariable Integer id) {
         advertisementService.delete(id, userService.getCurrentUser());
-        return ResponseEntity.ok("Deleted " + id);
+        return ResponseEntity.ok("Deleted advertisement #" + id);
     }
 
 }
