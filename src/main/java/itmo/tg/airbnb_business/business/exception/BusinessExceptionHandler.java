@@ -1,6 +1,6 @@
 package itmo.tg.airbnb_business.business.exception;
 
-import itmo.tg.airbnb_business.business.exception.exceptions.NotAllowedException;
+import itmo.tg.airbnb_business.business.exception.exceptions.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -57,6 +57,36 @@ public class BusinessExceptionHandler {
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(sb.toString());
 
+    }
+
+    @ExceptionHandler(ActiveBookingsException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ResponseEntity<String> handleActiveBookingsException(ActiveBookingsException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(BookOwnAdvertisementException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ResponseEntity<String> handleBookOwnAdvertisementException(BookOwnAdvertisementException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(BookingDatesConflictException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ResponseEntity<String> handleBookingDatesConflictException(BookingDatesConflictException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(InvalidBookingDatesException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<String> handleInvalidBookingDatesException(InvalidBookingDatesException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(AdvertisementBlockedException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ResponseEntity<String> handleAdvertisementBlockedException(AdvertisementBlockedException ex) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ex.getMessage());
     }
 
 }
