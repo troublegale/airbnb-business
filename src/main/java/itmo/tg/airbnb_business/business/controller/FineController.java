@@ -4,6 +4,7 @@ import itmo.tg.airbnb_business.auth.service.UserService;
 import itmo.tg.airbnb_business.business.dto.FineDTO;
 import itmo.tg.airbnb_business.business.service.FineService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,8 +20,11 @@ public class FineController {
     private final UserService userService;
 
     @GetMapping
-    public ResponseEntity<List<FineDTO>> getAll() {
-        var response = fineService.getAll();
+    public ResponseEntity<List<FineDTO>> getAll(
+            @RequestParam(defaultValue = "1") @Positive Integer page,
+            @RequestParam(defaultValue = "20") @Positive Integer pageSize,
+            @RequestParam(defaultValue = "false") @Valid Boolean active) {
+        var response = fineService.getAll(page, pageSize, active);
         return ResponseEntity.ok(response);
     }
 
@@ -32,8 +36,10 @@ public class FineController {
 
     @GetMapping("/my")
     public ResponseEntity<List<FineDTO>> getAssigned(
-            @RequestParam(defaultValue = "false") @Valid Boolean showAll) {
-        var response = fineService.getAssignedTo(userService.getCurrentUser(), showAll);
+            @RequestParam(defaultValue = "1") @Positive Integer page,
+            @RequestParam(defaultValue = "20") @Positive Integer pageSize,
+            @RequestParam(defaultValue = "true") @Valid Boolean active) {
+        var response = fineService.getAssignedTo(userService.getCurrentUser(), page, pageSize, active);
         return ResponseEntity.ok(response);
     }
 

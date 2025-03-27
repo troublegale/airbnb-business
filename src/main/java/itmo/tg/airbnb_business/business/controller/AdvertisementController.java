@@ -7,6 +7,7 @@ import itmo.tg.airbnb_business.business.dto.BookingResponseDTO;
 import itmo.tg.airbnb_business.business.exception.exceptions.ActiveBookingsException;
 import itmo.tg.airbnb_business.business.service.AdvertisementService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,15 +24,21 @@ public class AdvertisementController {
     private final UserService userService;
 
     @GetMapping
-    public ResponseEntity<List<AdvertisementResponseDTO>> getAll() {
-        var response = advertisementService.getAll();
+    public ResponseEntity<List<AdvertisementResponseDTO>> getAll(
+            @RequestParam(defaultValue = "1") @Positive Integer page,
+            @RequestParam(defaultValue = "20") @Positive Integer pageSize,
+            @RequestParam(defaultValue = "false") @Valid Boolean active
+    ) {
+        var response = advertisementService.getAll(page, pageSize, active);
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/my")
     public ResponseEntity<List<AdvertisementResponseDTO>> getOwned(
+            @RequestParam(defaultValue = "1") @Positive Integer page,
+            @RequestParam(defaultValue = "20") @Positive Integer pageSize,
             @RequestParam(defaultValue = "false") @Valid Boolean active) {
-        var response = advertisementService.getOwned(userService.getCurrentUser(), active);
+        var response = advertisementService.getOwned(userService.getCurrentUser(), page, pageSize, active);
         return ResponseEntity.ok(response);
     }
 
@@ -43,8 +50,10 @@ public class AdvertisementController {
 
     @GetMapping("/{id}/bookings")
     public ResponseEntity<List<BookingResponseDTO>> getBookings(
-            @PathVariable Long id, @RequestParam(defaultValue = "false") @Valid Boolean showAll) {
-        var response = advertisementService.getBookings(id, showAll);
+            @RequestParam(defaultValue = "1") @Positive Integer page,
+            @RequestParam(defaultValue = "20") @Positive Integer pageSize,
+            @PathVariable Long id, @RequestParam(defaultValue = "false") @Valid Boolean active) {
+        var response = advertisementService.getBookings(id, page, pageSize, active);
         return ResponseEntity.ok(response);
     }
 

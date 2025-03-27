@@ -12,6 +12,8 @@ import itmo.tg.airbnb_business.business.repository.AdvertisementBlockRepository;
 import itmo.tg.airbnb_business.business.repository.AdvertisementRepository;
 import itmo.tg.airbnb_business.business.repository.BookingRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,17 +37,24 @@ public class BookingService {
         return ModelDTOConverter.convert(booking);
     }
 
-    public List<BookingResponseDTO> getAll() {
-        var bookings = bookingRepository.findAll();
+    public List<BookingResponseDTO> getAll(Integer page, Integer pageSize, Boolean active) {
+        List<Booking> bookings;
+        Pageable pageable = PageRequest.of(page - 1, pageSize);
+        if (active) {
+            bookings = bookingRepository.findByStatus(BookingStatus.ACTIVE, pageable);
+        } else {
+            bookings = bookingRepository.findAll(pageable).getContent();
+        }
         return ModelDTOConverter.toBookingDTOList(bookings);
     }
 
-    public List<BookingResponseDTO> getOwned(User guest, Boolean showAll) {
+    public List<BookingResponseDTO> getOwned(User guest, Integer page, Integer pageSize, Boolean active) {
         List<Booking> bookings;
-        if (showAll) {
-            bookings = bookingRepository.findByGuest(guest);
+        Pageable pageable = PageRequest.of(page - 1, pageSize);
+        if (active) {
+            bookings = bookingRepository.findByGuestAndStatus(guest, BookingStatus.ACTIVE, pageable);
         } else {
-            bookings = bookingRepository.findByGuestAndStatus(guest, BookingStatus.ACTIVE);
+            bookings = bookingRepository.findByGuest(guest, pageable);
         }
         return ModelDTOConverter.toBookingDTOList(bookings);
     }

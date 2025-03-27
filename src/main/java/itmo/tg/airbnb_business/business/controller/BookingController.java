@@ -1,6 +1,5 @@
 package itmo.tg.airbnb_business.business.controller;
 
-import itmo.tg.airbnb_business.auth.model.User;
 import itmo.tg.airbnb_business.auth.service.UserService;
 import itmo.tg.airbnb_business.business.dto.BookingRequestDTO;
 import itmo.tg.airbnb_business.business.dto.BookingResponseDTO;
@@ -10,6 +9,7 @@ import itmo.tg.airbnb_business.business.exception.exceptions.BookingDatesConflic
 import itmo.tg.airbnb_business.business.exception.exceptions.InvalidBookingDatesException;
 import itmo.tg.airbnb_business.business.service.BookingService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,15 +26,20 @@ public class BookingController {
     private final UserService userService;
 
     @GetMapping
-    public ResponseEntity<List<BookingResponseDTO>> getAll() {
-        var response = bookingService.getAll();
+    public ResponseEntity<List<BookingResponseDTO>> getAll(
+            @RequestParam(defaultValue = "1") @Positive Integer page,
+            @RequestParam(defaultValue = "20") @Positive Integer pageSize,
+            @RequestParam(defaultValue = "false") @Valid Boolean active) {
+        var response = bookingService.getAll(page, pageSize, active);
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/my")
     public ResponseEntity<List<BookingResponseDTO>> getOwned(
-            @RequestParam(defaultValue = "false") @Valid Boolean showAll) {
-        var response = bookingService.getOwned(userService.getCurrentUser(), showAll);
+            @RequestParam(defaultValue = "1") @Positive Integer page,
+            @RequestParam(defaultValue = "20") @Positive Integer pageSize,
+            @RequestParam(defaultValue = "false") @Valid Boolean active) {
+        var response = bookingService.getOwned(userService.getCurrentUser(), page, pageSize, active);
         return ResponseEntity.ok(response);
     }
 

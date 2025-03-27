@@ -4,6 +4,7 @@ import itmo.tg.airbnb_business.auth.model.User;
 import itmo.tg.airbnb_business.business.model.Advertisement;
 import itmo.tg.airbnb_business.business.model.Booking;
 import itmo.tg.airbnb_business.business.model.enums.BookingStatus;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,11 +19,15 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
 
     List<Booking> findByAdvertisementAndStatus(Advertisement advertisement, BookingStatus status);
 
-    List<Booking> findByGuest(User guest);
+    List<Booking> findByAdvertisementAndStatus(Advertisement advertisement, BookingStatus status, Pageable pageable);
+
+    List<Booking> findByGuest(User guest, Pageable pageable);
 
     List<Booking> findByStatus(BookingStatus status);
 
-    List<Booking> findByGuestAndStatus(User guest, BookingStatus status);
+    List<Booking> findByStatus(BookingStatus status, Pageable pageable);
 
-    List<Booking> findByAdvertisement(Advertisement advertisement);
+    List<Booking> findByGuestAndStatus(User guest, BookingStatus status, Pageable pageable);
+
+    List<Booking> findByAdvertisement(Advertisement advertisement, Pageable pageable);
 }

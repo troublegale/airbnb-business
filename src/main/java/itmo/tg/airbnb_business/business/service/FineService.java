@@ -7,6 +7,8 @@ import itmo.tg.airbnb_business.business.model.Fine;
 import itmo.tg.airbnb_business.business.model.enums.FineStatus;
 import itmo.tg.airbnb_business.business.repository.FineRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,17 +26,24 @@ public class FineService {
         return ModelDTOConverter.convert(fine);
     }
 
-    public List<FineDTO> getAll() {
-        var fines = fineRepository.findAll();
+    public List<FineDTO> getAll(Integer page, Integer pageSize, Boolean active) {
+        List<Fine> fines;
+        Pageable pageable = PageRequest.of(page - 1, pageSize);
+        if (active) {
+            fines = fineRepository.findByStatus(FineStatus.ACTIVE, pageable);
+        } else {
+            fines = fineRepository.findAll(pageable).getContent();
+        }
         return ModelDTOConverter.toFineDTOList(fines);
     }
 
-    public List<FineDTO> getAssignedTo(User user, Boolean showAll) {
+    public List<FineDTO> getAssignedTo(User user, Integer page, Integer pageSize, Boolean active) {
         List<Fine> fines;
-        if (showAll) {
-            fines = fineRepository.findByUser(user);
+        Pageable pageable = PageRequest.of(page, pageSize);
+        if (active) {
+            fines = fineRepository.findByUserAndStatus(user, FineStatus.ACTIVE, pageable);
         } else {
-            fines = fineRepository.findByUserAndStatus(user, FineStatus.ACTIVE);
+            fines = fineRepository.findByUser(user, pageable);
         }
         return ModelDTOConverter.toFineDTOList(fines);
     }

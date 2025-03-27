@@ -15,6 +15,8 @@ import itmo.tg.airbnb_business.business.model.enums.BookingStatus;
 import itmo.tg.airbnb_business.business.repository.AdvertisementRepository;
 import itmo.tg.airbnb_business.business.repository.BookingRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,29 +36,37 @@ public class AdvertisementService {
         return ModelDTOConverter.convert(advert);
     }
 
-    public List<AdvertisementResponseDTO> getAll() {
-        var adverts = advertisementRepository.findAll();
+    public List<AdvertisementResponseDTO> getAll(Integer page, Integer pageSize, Boolean active) {
+        List<Advertisement> adverts;
+        Pageable pageable = PageRequest.of(page - 1, pageSize);
+        if (active) {
+            adverts = advertisementRepository.findByStatus(AdvertisementStatus.ACTIVE, pageable);
+        } else {
+            adverts = advertisementRepository.findAll(pageable).getContent();
+        }
         return ModelDTOConverter.toAdvertisementDTOList(adverts);
     }
 
-    public List<BookingResponseDTO> getBookings(Long id, Boolean showAll) {
+    public List<BookingResponseDTO> getBookings(Long id, Integer page, Integer pageSize, Boolean active) {
         var advert = advertisementRepository.findById(id).orElseThrow(() ->
                 new NoSuchElementException("Advertisement #" + id + " not found"));
         List<Booking> bookings;
-        if (showAll) {
-            bookings = bookingRepository.findByAdvertisement(advert);
+        Pageable pageable = PageRequest.of(page - 1, pageSize);
+        if (active) {
+            bookings = bookingRepository.findByAdvertisementAndStatus(advert, BookingStatus.ACTIVE, pageable);
         } else {
-            bookings = bookingRepository.findByAdvertisementAndStatus(advert, BookingStatus.ACTIVE);
+            bookings = bookingRepository.findByAdvertisement(advert, pageable);
         }
         return ModelDTOConverter.toBookingDTOList(bookings);
     }
 
-    public List<AdvertisementResponseDTO> getOwned(User host, Boolean active) {
+    public List<AdvertisementResponseDTO> getOwned(User host, Integer page, Integer pageSize, Boolean active) {
         List<Advertisement> adverts;
+        Pageable pageable = PageRequest.of(page - 1, pageSize);
         if (active) {
-            adverts = advertisementRepository.findByHostAndStatus(host, AdvertisementStatus.ACTIVE);
+            adverts = advertisementRepository.findByHostAndStatus(host, AdvertisementStatus.ACTIVE, pageable);
         } else {
-            adverts = advertisementRepository.findByHost(host);
+            adverts = advertisementRepository.findByHost(host, pageable);
         }
         return ModelDTOConverter.toAdvertisementDTOList(adverts);
     }
