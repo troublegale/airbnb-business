@@ -50,9 +50,10 @@ public class AdvertisementController {
 
     @GetMapping("/{id}/bookings")
     public ResponseEntity<List<BookingResponseDTO>> getBookings(
+            @PathVariable Long id,
             @RequestParam(defaultValue = "1") @Positive Integer page,
             @RequestParam(defaultValue = "20") @Positive Integer pageSize,
-            @PathVariable Long id, @RequestParam(defaultValue = "false") @Valid Boolean active) {
+            @RequestParam(defaultValue = "false") @Valid Boolean active) {
         var response = advertisementService.getBookings(id, page, pageSize, active);
         return ResponseEntity.ok(response);
     }
