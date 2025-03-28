@@ -5,6 +5,7 @@ import itmo.tg.airbnb_business.business.dto.*;
 import itmo.tg.airbnb_business.business.model.Advertisement;
 import itmo.tg.airbnb_business.business.model.Booking;
 import itmo.tg.airbnb_business.business.model.Fine;
+import itmo.tg.airbnb_business.business.model.GuestComplaint;
 
 import java.util.List;
 
@@ -71,6 +72,23 @@ public class ModelDTOConverter {
 
     public static List<FineDTO> toFineDTOList(List<Fine> fines) {
         return fines.stream().map(ModelDTOConverter::convert).toList();
+    }
+
+    public static GuestComplaintResponseDTO convert(GuestComplaint complaint) {
+        return GuestComplaintResponseDTO.builder()
+                .id(complaint.getId())
+                .guestUsername(complaint.getGuest().getUsername())
+                .advertisementId(complaint.getAdvertisement().getId())
+                .bookingId(complaint.getBooking().getId())
+                .proofLink(complaint.getProofLink())
+                .date(complaint.getDate())
+                .status(complaint.getStatus())
+                .resolverUsername(complaint.getResolver() == null ? null : complaint.getResolver().getUsername())
+                .build();
+    }
+
+    public static List<GuestComplaintResponseDTO> toGuestComplaintDTOList(List<GuestComplaint> complaints) {
+        return complaints.stream().map(ModelDTOConverter::convert).toList();
     }
 
 }

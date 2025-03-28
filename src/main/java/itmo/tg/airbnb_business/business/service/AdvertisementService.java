@@ -17,6 +17,7 @@ import itmo.tg.airbnb_business.business.repository.BookingRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,7 +39,7 @@ public class AdvertisementService {
 
     public List<AdvertisementResponseDTO> getAll(Integer page, Integer pageSize, Boolean active) {
         List<Advertisement> adverts;
-        Pageable pageable = PageRequest.of(page - 1, pageSize);
+        Pageable pageable = PageRequest.of(page - 1, pageSize, Sort.by("id"));
         if (active) {
             adverts = advertisementRepository.findByStatus(AdvertisementStatus.ACTIVE, pageable);
         } else {
@@ -51,7 +52,7 @@ public class AdvertisementService {
         var advert = advertisementRepository.findById(id).orElseThrow(() ->
                 new NoSuchElementException("Advertisement #" + id + " not found"));
         List<Booking> bookings;
-        Pageable pageable = PageRequest.of(page - 1, pageSize);
+        Pageable pageable = PageRequest.of(page - 1, pageSize, Sort.by("id"));
         if (active) {
             bookings = bookingRepository.findByAdvertisementAndStatus(advert, BookingStatus.ACTIVE, pageable);
         } else {
@@ -62,7 +63,7 @@ public class AdvertisementService {
 
     public List<AdvertisementResponseDTO> getOwned(User host, Integer page, Integer pageSize, Boolean active) {
         List<Advertisement> adverts;
-        Pageable pageable = PageRequest.of(page - 1, pageSize);
+        Pageable pageable = PageRequest.of(page - 1, pageSize, Sort.by("id"));
         if (active) {
             adverts = advertisementRepository.findByHostAndStatus(host, AdvertisementStatus.ACTIVE, pageable);
         } else {

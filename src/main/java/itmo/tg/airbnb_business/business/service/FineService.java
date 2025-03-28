@@ -9,6 +9,7 @@ import itmo.tg.airbnb_business.business.repository.FineRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,7 +29,7 @@ public class FineService {
 
     public List<FineDTO> getAll(Integer page, Integer pageSize, Boolean active) {
         List<Fine> fines;
-        Pageable pageable = PageRequest.of(page - 1, pageSize);
+        Pageable pageable = PageRequest.of(page - 1, pageSize, Sort.by("id"));
         if (active) {
             fines = fineRepository.findByStatus(FineStatus.ACTIVE, pageable);
         } else {
@@ -39,7 +40,7 @@ public class FineService {
 
     public List<FineDTO> getAssignedTo(User user, Integer page, Integer pageSize, Boolean active) {
         List<Fine> fines;
-        Pageable pageable = PageRequest.of(page, pageSize);
+        Pageable pageable = PageRequest.of(page, pageSize, Sort.by("id"));
         if (active) {
             fines = fineRepository.findByUserAndStatus(user, FineStatus.ACTIVE, pageable);
         } else {

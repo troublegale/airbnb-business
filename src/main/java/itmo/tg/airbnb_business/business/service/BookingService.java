@@ -14,6 +14,7 @@ import itmo.tg.airbnb_business.business.repository.BookingRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,7 +40,7 @@ public class BookingService {
 
     public List<BookingResponseDTO> getAll(Integer page, Integer pageSize, Boolean active) {
         List<Booking> bookings;
-        Pageable pageable = PageRequest.of(page - 1, pageSize);
+        Pageable pageable = PageRequest.of(page - 1, pageSize, Sort.by("id"));
         if (active) {
             bookings = bookingRepository.findByStatus(BookingStatus.ACTIVE, pageable);
         } else {
@@ -50,7 +51,7 @@ public class BookingService {
 
     public List<BookingResponseDTO> getOwned(User guest, Integer page, Integer pageSize, Boolean active) {
         List<Booking> bookings;
-        Pageable pageable = PageRequest.of(page - 1, pageSize);
+        Pageable pageable = PageRequest.of(page - 1, pageSize, Sort.by("id"));
         if (active) {
             bookings = bookingRepository.findByGuestAndStatus(guest, BookingStatus.ACTIVE, pageable);
         } else {
