@@ -21,12 +21,6 @@ public class FineService {
 
     private final FineRepository fineRepository;
 
-    public FineDTO get(Long id) {
-        var fine = fineRepository.findById(id).orElseThrow(() ->
-                new NoSuchElementException("Fine #" + id + " not found"));
-        return ModelDTOConverter.convert(fine);
-    }
-
     public List<FineDTO> getAll(Integer page, Integer pageSize, Boolean active) {
         List<Fine> fines;
         Pageable pageable = PageRequest.of(page - 1, pageSize, Sort.by("id"));

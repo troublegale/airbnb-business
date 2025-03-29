@@ -28,12 +28,6 @@ public class FineController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<FineDTO> get(@PathVariable Long id) {
-        var response = fineService.get(id);
-        return ResponseEntity.ok(response);
-    }
-
     @GetMapping("/my")
     public ResponseEntity<List<FineDTO>> getAssigned(
             @RequestParam(defaultValue = "1") @Positive Integer page,
