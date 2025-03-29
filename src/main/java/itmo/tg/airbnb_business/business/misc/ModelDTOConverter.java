@@ -104,4 +104,19 @@ public class ModelDTOConverter {
         return complaints.stream().map(ModelDTOConverter::convert).toList();
     }
 
+    public static HostJustificationResponseDTO convert(HostJustification justification) {
+        return HostJustificationResponseDTO.builder()
+                .id(justification.getId())
+                .hostUsername(justification.getHost().getUsername())
+                .guestComplaintId(justification.getComplaint().getId())
+                .proofLink(justification.getProofLink())
+                .status(justification.getStatus())
+                .resolverUsername(justification.getResolver() == null ? null : justification.getResolver().getUsername())
+                .build();
+    }
+
+    public static List<HostJustificationResponseDTO> toHostJustificationDTOList(List<HostJustification> justifications) {
+        return justifications.stream().map(ModelDTOConverter::convert).toList();
+    }
+
 }
