@@ -2,10 +2,7 @@ package itmo.tg.airbnb_business.business.misc;
 
 import itmo.tg.airbnb_business.auth.model.User;
 import itmo.tg.airbnb_business.business.dto.*;
-import itmo.tg.airbnb_business.business.model.Advertisement;
-import itmo.tg.airbnb_business.business.model.Booking;
-import itmo.tg.airbnb_business.business.model.Fine;
-import itmo.tg.airbnb_business.business.model.GuestComplaint;
+import itmo.tg.airbnb_business.business.model.*;
 
 import java.util.List;
 
@@ -88,6 +85,22 @@ public class ModelDTOConverter {
     }
 
     public static List<GuestComplaintResponseDTO> toGuestComplaintDTOList(List<GuestComplaint> complaints) {
+        return complaints.stream().map(ModelDTOConverter::convert).toList();
+    }
+
+    public static HostDamageComplaintResponseDTO convert(HostDamageComplaint complaint) {
+        return HostDamageComplaintResponseDTO.builder()
+                .id(complaint.getId())
+                .hostUsername(complaint.getHost().getUsername())
+                .bookingId(complaint.getBooking().getId())
+                .proofLink(complaint.getProofLink())
+                .compensationAmount(complaint.getCompensationAmount())
+                .status(complaint.getStatus())
+                .resolverUsername(complaint.getResolver() == null ? null : complaint.getResolver().getUsername())
+                .build();
+    }
+
+    public static List<HostDamageComplaintResponseDTO> toHostDamageComplaintDTOList(List<HostDamageComplaint> complaints) {
         return complaints.stream().map(ModelDTOConverter::convert).toList();
     }
 

@@ -32,7 +32,7 @@ public class HostDamageComplaint {
     private String proofLink;
 
     @Column(name = "compensation_amount", nullable = false)
-    private double compensationAmount;
+    private Double compensationAmount;
 
     @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)

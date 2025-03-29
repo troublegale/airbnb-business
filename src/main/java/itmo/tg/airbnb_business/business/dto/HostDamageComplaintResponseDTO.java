@@ -22,7 +22,7 @@ public class HostDamageComplaintResponseDTO {
 
     private String proofLink;
 
-    private double compensationAmount;
+    private Double compensationAmount;
 
     private TicketStatus status;
 

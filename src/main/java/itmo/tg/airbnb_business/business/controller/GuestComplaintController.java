@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/complaints")
+@RequestMapping("/guest-complaints")
 @RequiredArgsConstructor
 public class GuestComplaintController {
 
