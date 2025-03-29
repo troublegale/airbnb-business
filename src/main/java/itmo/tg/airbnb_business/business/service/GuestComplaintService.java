@@ -1,16 +1,15 @@
 package itmo.tg.airbnb_business.business.service;
 
-import itmo.tg.airbnb_business.business.exception.exceptions.TicketAlreadyPublishedException;
-import itmo.tg.airbnb_business.business.model.Booking;
-import itmo.tg.airbnb_business.security.model.User;
 import itmo.tg.airbnb_business.business.dto.GuestComplaintRequestDTO;
 import itmo.tg.airbnb_business.business.dto.GuestComplaintResponseDTO;
+import itmo.tg.airbnb_business.business.exception.exceptions.TicketAlreadyPublishedException;
 import itmo.tg.airbnb_business.business.misc.ModelDTOConverter;
+import itmo.tg.airbnb_business.business.model.Booking;
 import itmo.tg.airbnb_business.business.model.GuestComplaint;
 import itmo.tg.airbnb_business.business.model.enums.TicketStatus;
-import itmo.tg.airbnb_business.business.repository.AdvertisementRepository;
 import itmo.tg.airbnb_business.business.repository.BookingRepository;
 import itmo.tg.airbnb_business.business.repository.GuestComplaintRepository;
+import itmo.tg.airbnb_business.security.model.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -29,16 +28,30 @@ public class GuestComplaintService {
     private final GuestComplaintRepository guestComplaintRepository;
     private final BookingRepository bookingRepository;
 
+    public List<GuestComplaintResponseDTO> get(Integer page, Integer pageSize, String filter) {
+        List<GuestComplaint> complaints;
+        Pageable pageable = PageRequest.of(page, pageSize, Sort.by("id"));
+        if (filter.equalsIgnoreCase("pending")) {
+            complaints = guestComplaintRepository.findByStatus(TicketStatus.PENDING, pageable).getContent();
+        } else if (filter.equalsIgnoreCase("resolved")) {
+            complaints = guestComplaintRepository.findAll(pageable).stream().filter(
+                    c -> c.getResolver() != null).toList();
+        } else {
+            complaints = guestComplaintRepository.findAll(pageable).getContent();
+        }
+        return ModelDTOConverter.toGuestComplaintDTOList(complaints);
+    }
+
     public List<GuestComplaintResponseDTO> getOwned(User guest, Integer page, Integer pageSize, String filter) {
         List<GuestComplaint> complaints;
         Pageable pageable = PageRequest.of(page, pageSize, Sort.by("id"));
         if (filter.equalsIgnoreCase("pending")) {
-            complaints = guestComplaintRepository.findByGuestAndStatus(guest, TicketStatus.PENDING, pageable);
+            complaints = guestComplaintRepository.findByGuestAndStatus(guest, TicketStatus.PENDING, pageable).getContent();
         } else if (filter.equalsIgnoreCase("resolved")) {
             complaints = guestComplaintRepository.findByGuest(guest, pageable).stream().filter(
                     c -> c.getResolver() != null).toList();
         } else {
-            complaints = guestComplaintRepository.findByGuest(guest, pageable);
+            complaints = guestComplaintRepository.findByGuest(guest, pageable).getContent();
         }
         return ModelDTOConverter.toGuestComplaintDTOList(complaints);
     }

@@ -27,16 +27,30 @@ public class HostDamageComplaintService {
     private final HostDamageComplaintRepository hostDamageComplaintRepository;
     private final BookingRepository bookingRepository;
 
+    public List<HostDamageComplaintResponseDTO> get(Integer page, Integer pageSize, String filter) {
+        List<HostDamageComplaint> complaints;
+        Pageable pageable = PageRequest.of(page, pageSize, Sort.by("id"));
+        if (filter.equalsIgnoreCase("pending")) {
+            complaints = hostDamageComplaintRepository.findByStatus(TicketStatus.PENDING, pageable).getContent();
+        } else if (filter.equalsIgnoreCase("resolved")) {
+            complaints = hostDamageComplaintRepository.findAll(pageable).stream().filter(
+                    c -> c.getResolver() != null).toList();
+        } else {
+            complaints = hostDamageComplaintRepository.findAll(pageable).getContent();
+        }
+        return ModelDTOConverter.toHostDamageComplaintDTOList(complaints);
+    }
+
     public List<HostDamageComplaintResponseDTO> getOwned(User host, Integer page, Integer pageSize, String filter) {
         List<HostDamageComplaint> complaints;
         Pageable pageable = PageRequest.of(page, pageSize, Sort.by("id"));
         if (filter.equalsIgnoreCase("pending")) {
-            complaints = hostDamageComplaintRepository.findByHostAndStatus(host, TicketStatus.PENDING, pageable);
+            complaints = hostDamageComplaintRepository.findByHostAndStatus(host, TicketStatus.PENDING, pageable).getContent();
         } else if (filter.equalsIgnoreCase("resolved")) {
             complaints = hostDamageComplaintRepository.findByHost(host, pageable).stream().filter(
                     c -> c.getResolver() != null).toList();
         } else {
-            complaints = hostDamageComplaintRepository.findByHost(host, pageable);
+            complaints = hostDamageComplaintRepository.findByHost(host, pageable).getContent();
         }
         return ModelDTOConverter.toHostDamageComplaintDTOList(complaints);
     }

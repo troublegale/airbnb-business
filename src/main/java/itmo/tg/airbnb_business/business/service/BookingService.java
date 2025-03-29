@@ -42,7 +42,7 @@ public class BookingService {
         List<Booking> bookings;
         Pageable pageable = PageRequest.of(page - 1, pageSize, Sort.by("id"));
         if (active) {
-            bookings = bookingRepository.findByStatus(BookingStatus.ACTIVE, pageable);
+            bookings = bookingRepository.findByStatus(BookingStatus.ACTIVE, pageable).getContent();
         } else {
             bookings = bookingRepository.findAll(pageable).getContent();
         }
@@ -55,9 +55,9 @@ public class BookingService {
         List<Booking> bookings;
         Pageable pageable = PageRequest.of(page - 1, pageSize, Sort.by("id"));
         if (active) {
-            bookings = bookingRepository.findByAdvertisementAndStatus(advert, BookingStatus.ACTIVE, pageable);
+            bookings = bookingRepository.findByAdvertisementAndStatus(advert, BookingStatus.ACTIVE, pageable).getContent();
         } else {
-            bookings = bookingRepository.findByAdvertisement(advert, pageable);
+            bookings = bookingRepository.findByAdvertisement(advert, pageable).getContent();
         }
         return ModelDTOConverter.toBookingDTOList(bookings);
     }
@@ -66,9 +66,9 @@ public class BookingService {
         List<Booking> bookings;
         Pageable pageable = PageRequest.of(page - 1, pageSize, Sort.by("id"));
         if (active) {
-            bookings = bookingRepository.findByGuestAndStatus(guest, BookingStatus.ACTIVE, pageable);
+            bookings = bookingRepository.findByGuestAndStatus(guest, BookingStatus.ACTIVE, pageable).getContent();
         } else {
-            bookings = bookingRepository.findByGuest(guest, pageable);
+            bookings = bookingRepository.findByGuest(guest, pageable).getContent();
         }
         return ModelDTOConverter.toBookingDTOList(bookings);
     }

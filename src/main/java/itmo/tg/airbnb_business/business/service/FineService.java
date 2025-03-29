@@ -31,7 +31,7 @@ public class FineService {
         List<Fine> fines;
         Pageable pageable = PageRequest.of(page - 1, pageSize, Sort.by("id"));
         if (active) {
-            fines = fineRepository.findByStatus(FineStatus.ACTIVE, pageable);
+            fines = fineRepository.findByStatus(FineStatus.ACTIVE, pageable).getContent();
         } else {
             fines = fineRepository.findAll(pageable).getContent();
         }
@@ -42,9 +42,9 @@ public class FineService {
         List<Fine> fines;
         Pageable pageable = PageRequest.of(page, pageSize, Sort.by("id"));
         if (active) {
-            fines = fineRepository.findByUserAndStatus(user, FineStatus.ACTIVE, pageable);
+            fines = fineRepository.findByUserAndStatus(user, FineStatus.ACTIVE, pageable).getContent();
         } else {
-            fines = fineRepository.findByUser(user, pageable);
+            fines = fineRepository.findByUser(user, pageable).getContent();
         }
         return ModelDTOConverter.toFineDTOList(fines);
     }

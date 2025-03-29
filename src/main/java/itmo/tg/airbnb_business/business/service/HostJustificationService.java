@@ -27,16 +27,30 @@ public class HostJustificationService {
     private final HostJustificationRepository hostJustificationRepository;
     private final GuestComplaintRepository guestComplaintRepository;
 
+    public List<HostJustificationResponseDTO> get(Integer page, Integer pageSize, String filter) {
+        List<HostJustification> justifications;
+        Pageable pageable = PageRequest.of(page, pageSize, Sort.by("id"));
+        if (filter.equalsIgnoreCase("pending")) {
+            justifications = hostJustificationRepository.findByStatus(TicketStatus.PENDING, pageable).getContent();
+        } else if (filter.equalsIgnoreCase("resolved")) {
+            justifications = hostJustificationRepository.findAll(pageable).stream().filter(
+                    j -> j.getResolver() != null).toList();
+        } else {
+            justifications = hostJustificationRepository.findAll(pageable).getContent();
+        }
+        return ModelDTOConverter.toHostJustificationDTOList(justifications);
+    }
+
     public List<HostJustificationResponseDTO> getOwned(User host, Integer page, Integer pageSize, String filter) {
         List<HostJustification> justifications;
         Pageable pageable = PageRequest.of(page, pageSize, Sort.by("id"));
         if (filter.equalsIgnoreCase("pending")) {
-            justifications = hostJustificationRepository.findByHostAndStatus(host, TicketStatus.PENDING, pageable);
+            justifications = hostJustificationRepository.findByHostAndStatus(host, TicketStatus.PENDING, pageable).getContent();
         } else if (filter.equalsIgnoreCase("resolved")) {
             justifications = hostJustificationRepository.findByHost(host, pageable).stream().filter(
                     j -> j.getResolver() != null).toList();
         } else {
-            justifications = hostJustificationRepository.findByHost(host, pageable);
+            justifications = hostJustificationRepository.findByHost(host, pageable).getContent();
         }
         return ModelDTOConverter.toHostJustificationDTOList(justifications);
     }

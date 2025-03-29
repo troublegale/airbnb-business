@@ -41,7 +41,7 @@ public class AdvertisementService {
         List<Advertisement> adverts;
         Pageable pageable = PageRequest.of(page - 1, pageSize, Sort.by("id"));
         if (active) {
-            adverts = advertisementRepository.findByStatus(AdvertisementStatus.ACTIVE, pageable);
+            adverts = advertisementRepository.findByStatus(AdvertisementStatus.ACTIVE, pageable).getContent();
         } else {
             adverts = advertisementRepository.findAll(pageable).getContent();
         }
@@ -54,9 +54,9 @@ public class AdvertisementService {
         List<Booking> bookings;
         Pageable pageable = PageRequest.of(page - 1, pageSize, Sort.by("id"));
         if (active) {
-            bookings = bookingRepository.findByAdvertisementAndStatus(advert, BookingStatus.ACTIVE, pageable);
+            bookings = bookingRepository.findByAdvertisementAndStatus(advert, BookingStatus.ACTIVE, pageable).getContent();
         } else {
-            bookings = bookingRepository.findByAdvertisement(advert, pageable);
+            bookings = bookingRepository.findByAdvertisement(advert, pageable).getContent();
         }
         return ModelDTOConverter.toBookingDTOList(bookings);
     }
@@ -65,9 +65,9 @@ public class AdvertisementService {
         List<Advertisement> adverts;
         Pageable pageable = PageRequest.of(page - 1, pageSize, Sort.by("id"));
         if (active) {
-            adverts = advertisementRepository.findByHostAndStatus(host, AdvertisementStatus.ACTIVE, pageable);
+            adverts = advertisementRepository.findByHostAndStatus(host, AdvertisementStatus.ACTIVE, pageable).getContent();
         } else {
-            adverts = advertisementRepository.findByHost(host, pageable);
+            adverts = advertisementRepository.findByHost(host, pageable).getContent();
         }
         return ModelDTOConverter.toAdvertisementDTOList(adverts);
     }
