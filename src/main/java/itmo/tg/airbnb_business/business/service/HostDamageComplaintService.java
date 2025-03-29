@@ -8,6 +8,7 @@ import itmo.tg.airbnb_business.business.misc.ModelDTOConverter;
 import itmo.tg.airbnb_business.business.model.Booking;
 import itmo.tg.airbnb_business.business.model.HostDamageComplaint;
 import itmo.tg.airbnb_business.business.model.enums.TicketStatus;
+import itmo.tg.airbnb_business.business.model.enums.TicketType;
 import itmo.tg.airbnb_business.business.repository.BookingRepository;
 import itmo.tg.airbnb_business.business.repository.HostDamageComplaintRepository;
 import itmo.tg.airbnb_business.security.model.User;
@@ -93,7 +94,8 @@ public class HostDamageComplaintService {
         ticket.setStatus(TicketStatus.APPROVED);
         ticket.setResolver(resolver);
         hostDamageComplaintRepository.save(ticket);
-        penaltyService.assignFine(ticket.getCompensationAmount(), ticket.getBooking().getGuest());
+        penaltyService.assignFine(ticket.getCompensationAmount(), ticket.getBooking().getGuest(),
+                ticket.getId(), TicketType.DAMAGE);
         return ModelDTOConverter.convert(ticket);
     }
 

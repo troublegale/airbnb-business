@@ -1,5 +1,6 @@
 package itmo.tg.airbnb_business.business.service;
 
+import itmo.tg.airbnb_business.business.model.enums.TicketType;
 import itmo.tg.airbnb_business.security.model.User;
 import itmo.tg.airbnb_business.business.dto.BookingRequestDTO;
 import itmo.tg.airbnb_business.business.dto.BookingResponseDTO;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -85,9 +87,17 @@ public class BookingService {
         }
 
         if (advert.getStatus() == AdvertisementStatus.BLOCKED) {
-            var block = advertisementBlockRepository.findByAdvertisement(advert);
-            assert block.isPresent();
-            var until = block.get().getDateUntil();
+            var blocks = advertisementBlockRepository.findByAdvertisement(advert);
+            assert !blocks.isEmpty();
+            blocks.sort((b1, b2) -> {
+                if (b1.getDateUntil().isAfter(b2.getDateUntil())) {
+                    return 1;
+                } else if (b1.getDateUntil().isBefore(b2.getDateUntil())) {
+                    return -1;
+                }
+                return 0;
+            });
+            var until = blocks.get(0).getDateUntil();
             throw new AdvertisementBlockedException("Advertisement #" + advertId + " is blocked until " + until);
         }
 
@@ -127,7 +137,7 @@ public class BookingService {
 
         var advert = booking.getAdvertisement();
         penaltyService.blockAndAssignFine(
-                advert, booking.getStartDate(), booking.getEndDate(), user);
+                advert, -1L, TicketType.SELF, booking.getStartDate(), booking.getEndDate(), user);
         booking.setStatus(BookingStatus.CANCELLED);
         bookingRepository.save(booking);
         return "You cancelled booking #" + id + " as a host.\n" +

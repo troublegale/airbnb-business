@@ -29,3 +29,13 @@ databaseChangeLog:
             type: text
             constraints:
               nullable: false
+        - column:
+            name: ticket_id
+            type: bigint
+            constraints:
+              nullable: false
+        - column:
+            name: ticket_type
+            type: text
+            constraints:
+              nullable: false

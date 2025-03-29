@@ -3,10 +3,12 @@ package itmo.tg.airbnb_business.business.service;
 import itmo.tg.airbnb_business.business.dto.HostJustificationRequestDTO;
 import itmo.tg.airbnb_business.business.dto.HostJustificationResponseDTO;
 import itmo.tg.airbnb_business.business.exception.exceptions.TicketAlreadyPublishedException;
+import itmo.tg.airbnb_business.business.exception.exceptions.TicketAlreadyResolvedException;
 import itmo.tg.airbnb_business.business.misc.ModelDTOConverter;
 import itmo.tg.airbnb_business.business.model.GuestComplaint;
 import itmo.tg.airbnb_business.business.model.HostJustification;
 import itmo.tg.airbnb_business.business.model.enums.TicketStatus;
+import itmo.tg.airbnb_business.business.model.enums.TicketType;
 import itmo.tg.airbnb_business.business.repository.GuestComplaintRepository;
 import itmo.tg.airbnb_business.business.repository.HostJustificationRepository;
 import itmo.tg.airbnb_business.security.model.User;
@@ -83,12 +85,31 @@ public class HostJustificationService {
 
     @Transactional
     public HostJustificationResponseDTO approve(Long id, User resolver) {
-
+        var ticket = hostJustificationRepository.findById(id).orElseThrow(() ->
+                new NoSuchElementException("Damage complaint #" + id + " not found"));
+        if (ticket.getStatus() != TicketStatus.PENDING) {
+            throw new TicketAlreadyResolvedException("Damage complaint #" + id + " is already resolved");
+        }
+        ticket.setStatus(TicketStatus.APPROVED);
+        ticket.setResolver(resolver);
+        hostJustificationRepository.save(ticket);
+        var booking = ticket.getComplaint().getBooking();
+        var advert = booking.getAdvertisement();
+        penaltyService.retractPenalty(advert, booking.getEndDate(), ticket.getId(), TicketType.GUEST);
+        return ModelDTOConverter.convert(ticket);
     }
 
     @Transactional
     public HostJustificationResponseDTO reject(Long id, User resolver) {
-
+        var ticket = hostJustificationRepository.findById(id).orElseThrow(() ->
+                new NoSuchElementException("Damage complaint #" + id + " not found"));
+        if (ticket.getStatus() != TicketStatus.PENDING) {
+            throw new TicketAlreadyResolvedException("Damage complaint #" + id + " is already resolved");
+        }
+        ticket.setStatus(TicketStatus.REJECTED);
+        ticket.setResolver(resolver);
+        hostJustificationRepository.save(ticket);
+        return ModelDTOConverter.convert(ticket);
     }
 
 }

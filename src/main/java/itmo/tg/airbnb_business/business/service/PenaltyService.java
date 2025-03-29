@@ -1,5 +1,6 @@
 package itmo.tg.airbnb_business.business.service;
 
+import itmo.tg.airbnb_business.business.model.enums.TicketType;
 import itmo.tg.airbnb_business.security.model.User;
 import itmo.tg.airbnb_business.business.model.Advertisement;
 import itmo.tg.airbnb_business.business.model.AdvertisementBlock;
@@ -15,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -25,43 +27,48 @@ public class PenaltyService {
     private final AdvertisementBlockRepository advertisementBlockRepository;
 
     @Transactional
-    public void blockAndAssignFine(Advertisement advertisement, LocalDate startDate, LocalDate endDate, User host) {
-
-        var existingBlockOpt = advertisementBlockRepository.findByAdvertisement(advertisement);
-        if (existingBlockOpt.isPresent()) {
-            var existingBlock = existingBlockOpt.get();
-            if (existingBlock.getDateUntil().isBefore(endDate)) {
-                existingBlock.setDateUntil(endDate);
-                advertisementBlockRepository.save(existingBlock);
-            }
-        } else {
-            var block = AdvertisementBlock.builder()
-                    .advertisement(advertisement)
-                    .dateUntil(endDate)
-                    .build();
-            advertisementBlockRepository.save(block);
+    public void blockAndAssignFine(Advertisement advertisement, Long ticketId, TicketType ticketType,
+                                   LocalDate startDate, LocalDate endDate, User host) {
+        var block = AdvertisementBlock.builder()
+                .advertisement(advertisement)
+                .dateUntil(endDate)
+                .build();
+        advertisementBlockRepository.save(block);
+        if (advertisement.getStatus() != AdvertisementStatus.BLOCKED) {
             advertisement.setStatus(AdvertisementStatus.BLOCKED);
             advertisementRepository.save(advertisement);
         }
 
         var amount = calculateFineAmount(
                 startDate, endDate, advertisement.getBookPrice(), advertisement.getPricePerNight());
-        var fine = Fine.builder()
-                .user(host)
-                .amount(amount)
-                .status(FineStatus.ACTIVE)
-                .build();
-        fineRepository.save(fine);
-
+        assignFine(amount, host, ticketId, ticketType);
     }
 
     @Transactional
-    public void assignFine(Double amount, User user) {
+    public void assignFine(Double amount, User user, Long ticketId, TicketType ticketType) {
         var fine = Fine.builder()
                 .user(user)
                 .amount(amount)
                 .status(FineStatus.ACTIVE)
+                .ticketId(ticketId)
+                .ticketType(ticketType)
                 .build();
+        fineRepository.save(fine);
+    }
+
+    @Transactional
+    public void retractPenalty(Advertisement advertisement, LocalDate until, Long ticketId, TicketType ticketType) {
+        var blocks = advertisementBlockRepository.findByAdvertisement(advertisement);
+        var exactBlock = blocks.stream().filter(b -> b.getDateUntil().equals(until)).toList();
+        var block = exactBlock.get(0);
+        advertisementBlockRepository.delete(block);
+        if (blocks.size() == 1) {
+            advertisement.setStatus(AdvertisementStatus.ACTIVE);
+            advertisementRepository.save(advertisement);
+        }
+
+        var fine = fineRepository.findByTicketIdAndTicketType(ticketId, ticketType);
+        fine.setStatus(FineStatus.CANCELLED);
         fineRepository.save(fine);
     }
 
