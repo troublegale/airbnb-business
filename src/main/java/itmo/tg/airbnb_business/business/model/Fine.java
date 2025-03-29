@@ -1,6 +1,6 @@
 package itmo.tg.airbnb_business.business.model;
 
-import itmo.tg.airbnb_business.business.model.enums.TicketType;
+import itmo.tg.airbnb_business.business.model.enums.FineReason;
 import itmo.tg.airbnb_business.security.model.User;
 import itmo.tg.airbnb_business.business.model.enums.FineStatus;
 import jakarta.persistence.*;
@@ -37,6 +37,6 @@ public class Fine {
 
     @Column(name = "ticket_type", nullable = false)
     @Enumerated(EnumType.STRING)
-    private TicketType ticketType;
+    private FineReason fineReason;
 
 }

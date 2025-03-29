@@ -8,7 +8,7 @@ import itmo.tg.airbnb_business.business.misc.ModelDTOConverter;
 import itmo.tg.airbnb_business.business.model.GuestComplaint;
 import itmo.tg.airbnb_business.business.model.HostJustification;
 import itmo.tg.airbnb_business.business.model.enums.TicketStatus;
-import itmo.tg.airbnb_business.business.model.enums.TicketType;
+import itmo.tg.airbnb_business.business.model.enums.FineReason;
 import itmo.tg.airbnb_business.business.repository.GuestComplaintRepository;
 import itmo.tg.airbnb_business.business.repository.HostJustificationRepository;
 import itmo.tg.airbnb_business.security.model.User;
@@ -95,7 +95,7 @@ public class HostJustificationService {
         hostJustificationRepository.save(ticket);
         var booking = ticket.getComplaint().getBooking();
         var advert = booking.getAdvertisement();
-        penaltyService.retractPenalty(advert, booking.getEndDate(), ticket.getId(), TicketType.GUEST);
+        penaltyService.retractPenalty(advert, booking.getEndDate(), ticket.getId(), FineReason.GUEST);
         return ModelDTOConverter.convert(ticket);
     }
 

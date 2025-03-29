@@ -10,7 +10,7 @@ import itmo.tg.airbnb_business.business.model.Booking;
 import itmo.tg.airbnb_business.business.model.GuestComplaint;
 import itmo.tg.airbnb_business.business.model.enums.BookingStatus;
 import itmo.tg.airbnb_business.business.model.enums.TicketStatus;
-import itmo.tg.airbnb_business.business.model.enums.TicketType;
+import itmo.tg.airbnb_business.business.model.enums.FineReason;
 import itmo.tg.airbnb_business.business.repository.BookingRepository;
 import itmo.tg.airbnb_business.business.repository.GuestComplaintRepository;
 import itmo.tg.airbnb_business.security.model.User;
@@ -109,7 +109,7 @@ public class GuestComplaintService {
             startDate = ticket.getDate();
         }
         penaltyService.blockAndAssignFine(
-                advert, ticket.getId(), TicketType.GUEST, startDate, booking.getEndDate(), advert.getHost());
+                advert, ticket.getId(), FineReason.GUEST, startDate, booking.getEndDate(), advert.getHost());
         booking.setStatus(BookingStatus.CANCELLED);
         bookingRepository.save(booking);
         return ModelDTOConverter.convert(ticket);

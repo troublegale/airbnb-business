@@ -35,7 +35,7 @@ databaseChangeLog:
             constraints:
               nullable: false
         - column:
-            name: ticket_type
+            name: fine_reason
             type: text
             constraints:
               nullable: false

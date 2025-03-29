@@ -1,6 +1,6 @@
 package itmo.tg.airbnb_business.business.service;
 
-import itmo.tg.airbnb_business.business.model.enums.TicketType;
+import itmo.tg.airbnb_business.business.model.enums.FineReason;
 import itmo.tg.airbnb_business.security.model.User;
 import itmo.tg.airbnb_business.business.model.Advertisement;
 import itmo.tg.airbnb_business.business.model.AdvertisementBlock;
@@ -16,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -27,7 +26,7 @@ public class PenaltyService {
     private final AdvertisementBlockRepository advertisementBlockRepository;
 
     @Transactional
-    public void blockAndAssignFine(Advertisement advertisement, Long ticketId, TicketType ticketType,
+    public void blockAndAssignFine(Advertisement advertisement, Long ticketId, FineReason fineReason,
                                    LocalDate startDate, LocalDate endDate, User host) {
         var block = AdvertisementBlock.builder()
                 .advertisement(advertisement)
@@ -41,23 +40,23 @@ public class PenaltyService {
 
         var amount = calculateFineAmount(
                 startDate, endDate, advertisement.getBookPrice(), advertisement.getPricePerNight());
-        assignFine(amount, host, ticketId, ticketType);
+        assignFine(amount, host, ticketId, fineReason);
     }
 
     @Transactional
-    public void assignFine(Double amount, User user, Long ticketId, TicketType ticketType) {
+    public void assignFine(Double amount, User user, Long ticketId, FineReason fineReason) {
         var fine = Fine.builder()
                 .user(user)
                 .amount(amount)
                 .status(FineStatus.ACTIVE)
                 .ticketId(ticketId)
-                .ticketType(ticketType)
+                .fineReason(fineReason)
                 .build();
         fineRepository.save(fine);
     }
 
     @Transactional
-    public void retractPenalty(Advertisement advertisement, LocalDate until, Long ticketId, TicketType ticketType) {
+    public void retractPenalty(Advertisement advertisement, LocalDate until, Long ticketId, FineReason fineReason) {
         var blocks = advertisementBlockRepository.findByAdvertisement(advertisement);
         var exactBlock = blocks.stream().filter(b -> b.getDateUntil().equals(until)).toList();
         var block = exactBlock.get(0);
@@ -67,7 +66,7 @@ public class PenaltyService {
             advertisementRepository.save(advertisement);
         }
 
-        var fine = fineRepository.findByTicketIdAndTicketType(ticketId, ticketType);
+        var fine = fineRepository.findByTicketIdAndTicketType(ticketId, fineReason);
         fine.setStatus(FineStatus.CANCELLED);
         fineRepository.save(fine);
     }
