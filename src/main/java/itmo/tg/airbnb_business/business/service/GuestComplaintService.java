@@ -27,6 +27,7 @@ public class GuestComplaintService {
 
     private final GuestComplaintRepository guestComplaintRepository;
     private final BookingRepository bookingRepository;
+    private final PenaltyService penaltyService;
 
     public List<GuestComplaintResponseDTO> get(Integer page, Integer pageSize, String filter) {
         List<GuestComplaint> complaints;

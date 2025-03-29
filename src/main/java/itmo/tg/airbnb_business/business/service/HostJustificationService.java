@@ -26,6 +26,7 @@ public class HostJustificationService {
 
     private final HostJustificationRepository hostJustificationRepository;
     private final GuestComplaintRepository guestComplaintRepository;
+    private final PenaltyService penaltyService;
 
     public List<HostJustificationResponseDTO> get(Integer page, Integer pageSize, String filter) {
         List<HostJustification> justifications;

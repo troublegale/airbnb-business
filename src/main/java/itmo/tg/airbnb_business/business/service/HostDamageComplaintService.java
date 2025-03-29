@@ -26,6 +26,7 @@ public class HostDamageComplaintService {
 
     private final HostDamageComplaintRepository hostDamageComplaintRepository;
     private final BookingRepository bookingRepository;
+    private final PenaltyService penaltyService;
 
     public List<HostDamageComplaintResponseDTO> get(Integer page, Integer pageSize, String filter) {
         List<HostDamageComplaint> complaints;
