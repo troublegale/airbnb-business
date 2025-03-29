@@ -16,8 +16,6 @@ import java.util.List;
 @Transactional
 public interface BookingRepository extends JpaRepository<Booking, Long> {
 
-    Boolean existsByAdvertisementAndStatus(Advertisement advertisement, BookingStatus status);
-
     List<Booking> findByAdvertisementAndStatus(Advertisement advertisement, BookingStatus status);
 
     Page<Booking> findByAdvertisementAndStatus(Advertisement advertisement, BookingStatus status, Pageable pageable);

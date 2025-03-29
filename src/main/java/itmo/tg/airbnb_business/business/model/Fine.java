@@ -1,8 +1,8 @@
 package itmo.tg.airbnb_business.business.model;
 
 import itmo.tg.airbnb_business.business.model.enums.FineReason;
-import itmo.tg.airbnb_business.security.model.User;
 import itmo.tg.airbnb_business.business.model.enums.FineStatus;
+import itmo.tg.airbnb_business.security.model.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

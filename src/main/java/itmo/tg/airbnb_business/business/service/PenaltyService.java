@@ -1,15 +1,15 @@
 package itmo.tg.airbnb_business.business.service;
 
-import itmo.tg.airbnb_business.business.model.enums.FineReason;
-import itmo.tg.airbnb_business.security.model.User;
 import itmo.tg.airbnb_business.business.model.Advertisement;
 import itmo.tg.airbnb_business.business.model.AdvertisementBlock;
 import itmo.tg.airbnb_business.business.model.Fine;
 import itmo.tg.airbnb_business.business.model.enums.AdvertisementStatus;
+import itmo.tg.airbnb_business.business.model.enums.FineReason;
 import itmo.tg.airbnb_business.business.model.enums.FineStatus;
 import itmo.tg.airbnb_business.business.repository.AdvertisementBlockRepository;
 import itmo.tg.airbnb_business.business.repository.AdvertisementRepository;
 import itmo.tg.airbnb_business.business.repository.FineRepository;
+import itmo.tg.airbnb_business.security.model.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -66,7 +66,7 @@ public class PenaltyService {
             advertisementRepository.save(advertisement);
         }
 
-        var fine = fineRepository.findByTicketIdAndTicketType(ticketId, fineReason);
+        var fine = fineRepository.findByTicketIdAndFineReason(ticketId, fineReason);
         fine.setStatus(FineStatus.CANCELLED);
         fineRepository.save(fine);
     }

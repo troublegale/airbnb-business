@@ -3,7 +3,6 @@ package itmo.tg.airbnb_business.business.controller;
 import itmo.tg.airbnb_business.business.dto.GuestComplaintResponseDTO;
 import itmo.tg.airbnb_business.business.dto.HostDamageComplaintResponseDTO;
 import itmo.tg.airbnb_business.business.dto.HostJustificationResponseDTO;
-import itmo.tg.airbnb_business.business.exception.exceptions.TicketAlreadyPublishedException;
 import itmo.tg.airbnb_business.business.exception.exceptions.TicketAlreadyResolvedException;
 import itmo.tg.airbnb_business.business.service.GuestComplaintService;
 import itmo.tg.airbnb_business.business.service.HostDamageComplaintService;

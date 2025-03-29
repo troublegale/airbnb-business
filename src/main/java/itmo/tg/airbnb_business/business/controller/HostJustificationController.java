@@ -1,9 +1,9 @@
 package itmo.tg.airbnb_business.business.controller;
 
-import itmo.tg.airbnb_business.security.service.UserService;
 import itmo.tg.airbnb_business.business.dto.HostJustificationRequestDTO;
 import itmo.tg.airbnb_business.business.dto.HostJustificationResponseDTO;
 import itmo.tg.airbnb_business.business.service.HostJustificationService;
+import itmo.tg.airbnb_business.security.service.UserService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Pattern;
 import lombok.RequiredArgsConstructor;

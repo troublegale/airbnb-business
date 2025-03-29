@@ -1,7 +1,5 @@
 package itmo.tg.airbnb_business.business.service;
 
-import itmo.tg.airbnb_business.business.model.enums.FineReason;
-import itmo.tg.airbnb_business.security.model.User;
 import itmo.tg.airbnb_business.business.dto.BookingRequestDTO;
 import itmo.tg.airbnb_business.business.dto.BookingResponseDTO;
 import itmo.tg.airbnb_business.business.exception.exceptions.*;
@@ -9,9 +7,11 @@ import itmo.tg.airbnb_business.business.misc.ModelDTOConverter;
 import itmo.tg.airbnb_business.business.model.Booking;
 import itmo.tg.airbnb_business.business.model.enums.AdvertisementStatus;
 import itmo.tg.airbnb_business.business.model.enums.BookingStatus;
+import itmo.tg.airbnb_business.business.model.enums.FineReason;
 import itmo.tg.airbnb_business.business.repository.AdvertisementBlockRepository;
 import itmo.tg.airbnb_business.business.repository.AdvertisementRepository;
 import itmo.tg.airbnb_business.business.repository.BookingRepository;
+import itmo.tg.airbnb_business.security.model.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
