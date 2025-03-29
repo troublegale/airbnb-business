@@ -95,18 +95,4 @@ public class AdvertisementService {
         throw new NotAllowedException("Not allowed to update advertisement #" + id);
     }
 
-    @Transactional
-    public void delete(Long id, User host) {
-        var advert = advertisementRepository.findById(id).orElseThrow(() ->
-                new NoSuchElementException("Advertisement #" + id + " not found"));
-        if (!advert.getHost().equals(host) && host.getRole() != Role.ROLE_ADMIN) {
-            throw new NotAllowedException("Not allowed to delete advertisement #" + id);
-        }
-        if (bookingRepository.existsByAdvertisementAndStatus(advert, BookingStatus.ACTIVE)) {
-            throw new ActiveBookingsException("There are active bookings on advertisement #" + id +
-                    "\nCancel them or wait until their expiration.");
-        }
-        advertisementRepository.delete(advert);
-    }
-
 }

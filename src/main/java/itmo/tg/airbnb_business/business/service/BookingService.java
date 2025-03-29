@@ -86,7 +86,8 @@ public class BookingService {
 
         if (advert.getStatus() == AdvertisementStatus.BLOCKED) {
             var block = advertisementBlockRepository.findByAdvertisement(advert);
-            var until = block.getDateUntil();
+            assert block.isPresent();
+            var until = block.get().getDateUntil();
             throw new AdvertisementBlockedException("Advertisement #" + advertId + " is blocked until " + until);
         }
 

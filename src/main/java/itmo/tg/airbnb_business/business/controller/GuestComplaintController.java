@@ -1,5 +1,6 @@
 package itmo.tg.airbnb_business.business.controller;
 
+import itmo.tg.airbnb_business.business.exception.exceptions.BookingAlreadyExpiredException;
 import itmo.tg.airbnb_business.security.service.UserService;
 import itmo.tg.airbnb_business.business.dto.GuestComplaintRequestDTO;
 import itmo.tg.airbnb_business.business.dto.GuestComplaintResponseDTO;
@@ -8,6 +9,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,6 +37,12 @@ public class GuestComplaintController {
             @RequestBody @Valid GuestComplaintRequestDTO guestComplaintRequestDTO) {
         var response = guestComplaintService.create(guestComplaintRequestDTO, userService.getCurrentUser());
         return ResponseEntity.ok(response);
+    }
+
+    @ExceptionHandler(BookingAlreadyExpiredException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ResponseEntity<String> handleBookingAlreadyExpiredException(BookingAlreadyExpiredException e) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
     }
 
 }

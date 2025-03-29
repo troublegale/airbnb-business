@@ -3,6 +3,8 @@ package itmo.tg.airbnb_business.business.controller;
 import itmo.tg.airbnb_business.business.dto.GuestComplaintResponseDTO;
 import itmo.tg.airbnb_business.business.dto.HostDamageComplaintResponseDTO;
 import itmo.tg.airbnb_business.business.dto.HostJustificationResponseDTO;
+import itmo.tg.airbnb_business.business.exception.exceptions.TicketAlreadyPublishedException;
+import itmo.tg.airbnb_business.business.exception.exceptions.TicketAlreadyResolvedException;
 import itmo.tg.airbnb_business.business.service.GuestComplaintService;
 import itmo.tg.airbnb_business.business.service.HostDamageComplaintService;
 import itmo.tg.airbnb_business.business.service.HostJustificationService;
@@ -10,6 +12,7 @@ import itmo.tg.airbnb_business.security.service.UserService;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -86,6 +89,12 @@ public class AdminController {
     public ResponseEntity<HostJustificationResponseDTO> rejectHostJustification(@PathVariable Long id) {
         var response = hostJustificationService.reject(id, userService.getCurrentUser());
         return ResponseEntity.ok(response);
+    }
+
+    @ExceptionHandler(TicketAlreadyResolvedException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ResponseEntity<String> handleTicketAlreadyResolvedException(TicketAlreadyResolvedException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
     }
 
 }

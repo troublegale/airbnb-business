@@ -2,10 +2,13 @@ package itmo.tg.airbnb_business.business.service;
 
 import itmo.tg.airbnb_business.business.dto.GuestComplaintRequestDTO;
 import itmo.tg.airbnb_business.business.dto.GuestComplaintResponseDTO;
+import itmo.tg.airbnb_business.business.exception.exceptions.BookingAlreadyExpiredException;
 import itmo.tg.airbnb_business.business.exception.exceptions.TicketAlreadyPublishedException;
+import itmo.tg.airbnb_business.business.exception.exceptions.TicketAlreadyResolvedException;
 import itmo.tg.airbnb_business.business.misc.ModelDTOConverter;
 import itmo.tg.airbnb_business.business.model.Booking;
 import itmo.tg.airbnb_business.business.model.GuestComplaint;
+import itmo.tg.airbnb_business.business.model.enums.BookingStatus;
 import itmo.tg.airbnb_business.business.model.enums.TicketStatus;
 import itmo.tg.airbnb_business.business.repository.BookingRepository;
 import itmo.tg.airbnb_business.business.repository.GuestComplaintRepository;
@@ -62,6 +65,9 @@ public class GuestComplaintService {
         var bookingId = dto.getBookingId();
         var booking = bookingRepository.findById(bookingId).orElseThrow(() ->
                 new NoSuchElementException("Booking #" + bookingId + " not found"));
+        if (booking.getStatus() == BookingStatus.EXPIRED) {
+            throw new BookingAlreadyExpiredException("Booking #" + bookingId + " is already expired");
+        }
         verifyComplaint(booking, guest);
         var complaint = GuestComplaint.builder()
                 .guest(guest)
@@ -85,12 +91,39 @@ public class GuestComplaintService {
 
     @Transactional
     public GuestComplaintResponseDTO approve(Long id, User resolver) {
-
+        var ticket = guestComplaintRepository.findById(id).orElseThrow(() ->
+                new NoSuchElementException("Guest complaint #" + id + " not found"));
+        if (ticket.getStatus() != TicketStatus.PENDING) {
+            throw new TicketAlreadyResolvedException("Guest complaint #" + id + " is already resolved");
+        }
+        ticket.setStatus(TicketStatus.APPROVED);
+        ticket.setResolver(resolver);
+        guestComplaintRepository.save(ticket);
+        var booking = ticket.getBooking();
+        var advert = booking.getAdvertisement();
+        LocalDate startDate;
+        if (ticket.getDate().isBefore(booking.getStartDate())) {
+            startDate = booking.getStartDate();
+        } else {
+            startDate = ticket.getDate();
+        }
+        penaltyService.blockAndAssignFine(advert, startDate, booking.getEndDate(), advert.getHost());
+        booking.setStatus(BookingStatus.CANCELLED);
+        bookingRepository.save(booking);
+        return ModelDTOConverter.convert(ticket);
     }
 
     @Transactional
     public GuestComplaintResponseDTO reject(Long id, User resolver) {
-
+        var ticket = guestComplaintRepository.findById(id).orElseThrow(() ->
+                new NoSuchElementException("Guest complaint #" + id + " not found"));
+        if (ticket.getStatus() != TicketStatus.PENDING) {
+            throw new TicketAlreadyResolvedException("Guest complaint #" + id + " is already resolved");
+        }
+        ticket.setStatus(TicketStatus.REJECTED);
+        ticket.setResolver(resolver);
+        guestComplaintRepository.save(ticket);
+        return ModelDTOConverter.convert(ticket);
     }
 
 }

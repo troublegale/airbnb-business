@@ -27,8 +27,22 @@ public class PenaltyService {
     @Transactional
     public void blockAndAssignFine(Advertisement advertisement, LocalDate startDate, LocalDate endDate, User host) {
 
-        advertisement.setStatus(AdvertisementStatus.BLOCKED);
-        advertisementRepository.save(advertisement);
+        var existingBlockOpt = advertisementBlockRepository.findByAdvertisement(advertisement);
+        if (existingBlockOpt.isPresent()) {
+            var existingBlock = existingBlockOpt.get();
+            if (existingBlock.getDateUntil().isBefore(endDate)) {
+                existingBlock.setDateUntil(endDate);
+                advertisementBlockRepository.save(existingBlock);
+            }
+        } else {
+            var block = AdvertisementBlock.builder()
+                    .advertisement(advertisement)
+                    .dateUntil(endDate)
+                    .build();
+            advertisementBlockRepository.save(block);
+            advertisement.setStatus(AdvertisementStatus.BLOCKED);
+            advertisementRepository.save(advertisement);
+        }
 
         var amount = calculateFineAmount(
                 startDate, endDate, advertisement.getBookPrice(), advertisement.getPricePerNight());
@@ -38,12 +52,6 @@ public class PenaltyService {
                 .status(FineStatus.ACTIVE)
                 .build();
         fineRepository.save(fine);
-
-        var block = AdvertisementBlock.builder()
-                .advertisement(advertisement)
-                .dateUntil(endDate)
-                .build();
-        advertisementBlockRepository.save(block);
 
     }
 

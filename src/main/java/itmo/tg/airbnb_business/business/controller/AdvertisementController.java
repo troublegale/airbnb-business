@@ -73,12 +73,6 @@ public class AdvertisementController {
         return ResponseEntity.ok(response);
     }
 
-    @DeleteMapping("/{id}/delete")
-    public ResponseEntity<String> delete(@PathVariable Long id) {
-        advertisementService.delete(id, userService.getCurrentUser());
-        return ResponseEntity.ok("Deleted advertisement #" + id);
-    }
-
     @ExceptionHandler(ActiveBookingsException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
     public ResponseEntity<String> handleActiveBookingsException(ActiveBookingsException ex) {
