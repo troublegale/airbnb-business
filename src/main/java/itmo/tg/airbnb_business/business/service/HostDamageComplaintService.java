@@ -1,15 +1,15 @@
 package itmo.tg.airbnb_business.business.service;
 
-import itmo.tg.airbnb_business.business.exception.exceptions.TicketAlreadyPublishedException;
-import itmo.tg.airbnb_business.business.model.Booking;
-import itmo.tg.airbnb_business.security.model.User;
 import itmo.tg.airbnb_business.business.dto.HostDamageComplaintRequestDTO;
 import itmo.tg.airbnb_business.business.dto.HostDamageComplaintResponseDTO;
+import itmo.tg.airbnb_business.business.exception.exceptions.TicketAlreadyPublishedException;
 import itmo.tg.airbnb_business.business.misc.ModelDTOConverter;
+import itmo.tg.airbnb_business.business.model.Booking;
 import itmo.tg.airbnb_business.business.model.HostDamageComplaint;
 import itmo.tg.airbnb_business.business.model.enums.TicketStatus;
 import itmo.tg.airbnb_business.business.repository.BookingRepository;
 import itmo.tg.airbnb_business.business.repository.HostDamageComplaintRepository;
+import itmo.tg.airbnb_business.security.model.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -79,6 +79,16 @@ public class HostDamageComplaintService {
             throw new TicketAlreadyPublishedException(
                     "Your complaint on booking #" + booking.getId() + " is already approved or is still pending");
         }
+    }
+
+    @Transactional
+    public HostDamageComplaintResponseDTO approve(Long id, User resolver) {
+
+    }
+
+    @Transactional
+    public HostDamageComplaintResponseDTO reject(Long id, User resolver) {
+
     }
 
 }

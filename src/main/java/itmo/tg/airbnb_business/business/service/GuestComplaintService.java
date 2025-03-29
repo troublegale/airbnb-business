@@ -82,4 +82,14 @@ public class GuestComplaintService {
         }
     }
 
+    @Transactional
+    public GuestComplaintResponseDTO approve(Long id, User resolver) {
+
+    }
+
+    @Transactional
+    public GuestComplaintResponseDTO reject(Long id, User resolver) {
+
+    }
+
 }

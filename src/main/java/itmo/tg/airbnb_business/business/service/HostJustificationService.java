@@ -1,15 +1,15 @@
 package itmo.tg.airbnb_business.business.service;
 
-import itmo.tg.airbnb_business.business.exception.exceptions.TicketAlreadyPublishedException;
-import itmo.tg.airbnb_business.business.model.GuestComplaint;
-import itmo.tg.airbnb_business.security.model.User;
 import itmo.tg.airbnb_business.business.dto.HostJustificationRequestDTO;
 import itmo.tg.airbnb_business.business.dto.HostJustificationResponseDTO;
+import itmo.tg.airbnb_business.business.exception.exceptions.TicketAlreadyPublishedException;
 import itmo.tg.airbnb_business.business.misc.ModelDTOConverter;
+import itmo.tg.airbnb_business.business.model.GuestComplaint;
 import itmo.tg.airbnb_business.business.model.HostJustification;
 import itmo.tg.airbnb_business.business.model.enums.TicketStatus;
 import itmo.tg.airbnb_business.business.repository.GuestComplaintRepository;
 import itmo.tg.airbnb_business.business.repository.HostJustificationRepository;
+import itmo.tg.airbnb_business.security.model.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -78,6 +78,16 @@ public class HostJustificationService {
             throw new TicketAlreadyPublishedException(
                     "Your justification on complaint #" + complaint.getId() + " is already approved or is still pending");
         }
+    }
+
+    @Transactional
+    public HostJustificationResponseDTO approve(Long id, User resolver) {
+
+    }
+
+    @Transactional
+    public HostJustificationResponseDTO reject(Long id, User resolver) {
+
     }
 
 }
