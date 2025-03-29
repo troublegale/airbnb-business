@@ -1,5 +1,6 @@
 package itmo.tg.airbnb_business.business.repository;
 
+import itmo.tg.airbnb_business.business.model.GuestComplaint;
 import itmo.tg.airbnb_business.security.model.User;
 import itmo.tg.airbnb_business.business.model.HostJustification;
 import itmo.tg.airbnb_business.business.model.enums.TicketStatus;
@@ -15,5 +16,7 @@ public interface HostJustificationRepository extends JpaRepository<HostJustifica
     List<HostJustification> findByHost(User host, Pageable pageable);
 
     List<HostJustification> findByHostAndStatus(User host, TicketStatus status, Pageable pageable);
+
+    Boolean existsByComplaintAndHostAndStatusNot(GuestComplaint complaint, User host, TicketStatus status);
 
 }

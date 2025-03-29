@@ -1,5 +1,7 @@
 package itmo.tg.airbnb_business.business.service;
 
+import itmo.tg.airbnb_business.business.exception.exceptions.TicketAlreadyPublishedException;
+import itmo.tg.airbnb_business.business.model.GuestComplaint;
 import itmo.tg.airbnb_business.security.model.User;
 import itmo.tg.airbnb_business.business.dto.HostJustificationRequestDTO;
 import itmo.tg.airbnb_business.business.dto.HostJustificationResponseDTO;
@@ -13,6 +15,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -38,10 +41,12 @@ public class HostJustificationService {
         return ModelDTOConverter.toHostJustificationDTOList(justifications);
     }
 
+    @Transactional
     public HostJustificationResponseDTO create(HostJustificationRequestDTO dto, User host) {
         var complaintId = dto.getGuestComplaintId();
         var complaint = guestComplaintRepository.findById(complaintId).orElseThrow(() ->
                 new NoSuchElementException("Complaint #" + complaintId + " not found"));
+        verifyJustification(complaint, host);
         var justification = HostJustification.builder()
                 .host(host)
                 .complaint(complaint)
@@ -50,6 +55,15 @@ public class HostJustificationService {
                 .build();
         hostJustificationRepository.save(justification);
         return ModelDTOConverter.convert(justification);
+    }
+
+    private void verifyJustification(GuestComplaint complaint, User host) {
+        var exists = hostJustificationRepository
+                .existsByComplaintAndHostAndStatusNot(complaint, host, TicketStatus.REJECTED);
+        if (exists) {
+            throw new TicketAlreadyPublishedException(
+                    "Your justification on complaint #" + complaint.getId() + " is already approved or is still pending");
+        }
     }
 
 }

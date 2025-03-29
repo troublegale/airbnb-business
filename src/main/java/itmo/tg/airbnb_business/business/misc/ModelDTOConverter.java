@@ -75,7 +75,6 @@ public class ModelDTOConverter {
         return GuestComplaintResponseDTO.builder()
                 .id(complaint.getId())
                 .guestUsername(complaint.getGuest().getUsername())
-                .advertisementId(complaint.getAdvertisement().getId())
                 .bookingId(complaint.getBooking().getId())
                 .proofLink(complaint.getProofLink())
                 .date(complaint.getDate())

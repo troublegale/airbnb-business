@@ -1,6 +1,7 @@
 package itmo.tg.airbnb_business.business.exception;
 
 import itmo.tg.airbnb_business.business.exception.exceptions.NotAllowedException;
+import itmo.tg.airbnb_business.business.exception.exceptions.TicketAlreadyPublishedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -57,6 +58,12 @@ public class GlobalBusinessExceptionHandler {
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(sb.toString());
 
+    }
+
+    @ExceptionHandler(TicketAlreadyPublishedException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ResponseEntity<String> handleTicketAlreadyPublishedException(TicketAlreadyPublishedException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
     }
 
 }

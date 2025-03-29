@@ -19,13 +19,6 @@ databaseChangeLog:
               foreignKeyName: fk_guest_complaint_guest
               references: users(id)
         - column:
-            name: advertisement_id
-            type: bigint
-            constraints:
-              nullable: false
-              foreignKeyName: fk_guest_complaint_advertisement
-              references: advertisements(id)
-        - column:
             name: booking_id
             type: bigint
             constraints:

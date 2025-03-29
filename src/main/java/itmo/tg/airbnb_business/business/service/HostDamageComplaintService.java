@@ -1,5 +1,7 @@
 package itmo.tg.airbnb_business.business.service;
 
+import itmo.tg.airbnb_business.business.exception.exceptions.TicketAlreadyPublishedException;
+import itmo.tg.airbnb_business.business.model.Booking;
 import itmo.tg.airbnb_business.security.model.User;
 import itmo.tg.airbnb_business.business.dto.HostDamageComplaintRequestDTO;
 import itmo.tg.airbnb_business.business.dto.HostDamageComplaintResponseDTO;
@@ -13,6 +15,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -38,10 +41,12 @@ public class HostDamageComplaintService {
         return ModelDTOConverter.toHostDamageComplaintDTOList(complaints);
     }
 
+    @Transactional
     public HostDamageComplaintResponseDTO create(HostDamageComplaintRequestDTO dto, User host) {
         var bookingId = dto.getBookingId();
         var booking = bookingRepository.findById(bookingId).orElseThrow(() ->
                 new NoSuchElementException("Booking #" + bookingId + " not found"));
+        verifyComplaint(booking, host);
         var complaint = HostDamageComplaint.builder()
                 .host(host)
                 .booking(booking)
@@ -51,6 +56,15 @@ public class HostDamageComplaintService {
                 .build();
         hostDamageComplaintRepository.save(complaint);
         return ModelDTOConverter.convert(complaint);
+    }
+
+    private void verifyComplaint(Booking booking, User host) {
+        var exists = hostDamageComplaintRepository
+                .existsByBookingAndHostAndStatusNot(booking, host, TicketStatus.REJECTED);
+        if (exists) {
+            throw new TicketAlreadyPublishedException(
+                    "Your complaint on booking #" + booking.getId() + " is already approved or is still pending");
+        }
     }
 
 }

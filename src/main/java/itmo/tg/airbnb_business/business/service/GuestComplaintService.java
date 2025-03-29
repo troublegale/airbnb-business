@@ -1,5 +1,7 @@
 package itmo.tg.airbnb_business.business.service;
 
+import itmo.tg.airbnb_business.business.exception.exceptions.TicketAlreadyPublishedException;
+import itmo.tg.airbnb_business.business.model.Booking;
 import itmo.tg.airbnb_business.security.model.User;
 import itmo.tg.airbnb_business.business.dto.GuestComplaintRequestDTO;
 import itmo.tg.airbnb_business.business.dto.GuestComplaintResponseDTO;
@@ -14,6 +16,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -24,7 +27,6 @@ import java.util.NoSuchElementException;
 public class GuestComplaintService {
 
     private final GuestComplaintRepository guestComplaintRepository;
-    private final AdvertisementRepository advertisementRepository;
     private final BookingRepository bookingRepository;
 
     public List<GuestComplaintResponseDTO> getOwned(User guest, Integer page, Integer pageSize, String filter) {
@@ -41,16 +43,14 @@ public class GuestComplaintService {
         return ModelDTOConverter.toGuestComplaintDTOList(complaints);
     }
 
+    @Transactional
     public GuestComplaintResponseDTO create(GuestComplaintRequestDTO dto, User guest) {
-        var advertId = dto.getAdvertisementId();
-        var advert = advertisementRepository.findById(advertId).orElseThrow(() ->
-                new NoSuchElementException("Advertisement #" + advertId + " not found"));
         var bookingId = dto.getBookingId();
         var booking = bookingRepository.findById(bookingId).orElseThrow(() ->
                 new NoSuchElementException("Booking #" + bookingId + " not found"));
+        verifyComplaint(booking, guest);
         var complaint = GuestComplaint.builder()
                 .guest(guest)
-                .advertisement(advert)
                 .booking(booking)
                 .proofLink(dto.getProofLink())
                 .date(LocalDate.now())
@@ -58,6 +58,15 @@ public class GuestComplaintService {
                 .build();
         guestComplaintRepository.save(complaint);
         return ModelDTOConverter.convert(complaint);
+    }
+
+    private void verifyComplaint(Booking booking, User guest) {
+        var exists = guestComplaintRepository
+                .existsByBookingAndGuestAndStatusNot(booking, guest, TicketStatus.REJECTED);
+        if (exists) {
+            throw new TicketAlreadyPublishedException(
+                    "Your complaint on booking #" + booking.getId() + " is already approved or is still pending");
+        }
     }
 
 }

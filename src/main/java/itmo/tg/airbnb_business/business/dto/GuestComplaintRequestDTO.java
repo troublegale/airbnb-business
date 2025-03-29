@@ -14,9 +14,6 @@ import lombok.NoArgsConstructor;
 public class GuestComplaintRequestDTO {
 
     @NotNull
-    private Long advertisementId;
-
-    @NotNull
     private Long bookingId;
 
     @NotNull

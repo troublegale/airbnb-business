@@ -1,5 +1,6 @@
 package itmo.tg.airbnb_business.business.repository;
 
+import itmo.tg.airbnb_business.business.model.Booking;
 import itmo.tg.airbnb_business.security.model.User;
 import itmo.tg.airbnb_business.business.model.GuestComplaint;
 import itmo.tg.airbnb_business.business.model.enums.TicketStatus;
@@ -17,5 +18,7 @@ public interface GuestComplaintRepository extends JpaRepository<GuestComplaint, 
     List<GuestComplaint> findByGuest(User guest, Pageable pageable);
 
     List<GuestComplaint> findByGuestAndStatus(User guest, TicketStatus status, Pageable pageable);
+
+    Boolean existsByBookingAndGuestAndStatusNot(Booking booking, User guest, TicketStatus status);
 
 }

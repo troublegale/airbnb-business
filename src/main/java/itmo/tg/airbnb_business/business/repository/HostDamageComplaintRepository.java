@@ -1,5 +1,6 @@
 package itmo.tg.airbnb_business.business.repository;
 
+import itmo.tg.airbnb_business.business.model.Booking;
 import itmo.tg.airbnb_business.security.model.User;
 import itmo.tg.airbnb_business.business.model.HostDamageComplaint;
 import itmo.tg.airbnb_business.business.model.enums.TicketStatus;
@@ -15,5 +16,7 @@ public interface HostDamageComplaintRepository extends JpaRepository<HostDamageC
     List<HostDamageComplaint> findByHost(User host, Pageable pageable);
 
     List<HostDamageComplaint> findByHostAndStatus(User host, TicketStatus status, Pageable pageable);
+
+    Boolean existsByBookingAndHostAndStatusNot(Booking booking, User host, TicketStatus status);
 
 }
