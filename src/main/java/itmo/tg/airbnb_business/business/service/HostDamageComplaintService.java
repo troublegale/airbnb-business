@@ -3,6 +3,7 @@ package itmo.tg.airbnb_business.business.service;
 import itmo.tg.airbnb_business.business.dto.HostDamageComplaintRequestDTO;
 import itmo.tg.airbnb_business.business.dto.HostDamageComplaintResponseDTO;
 import itmo.tg.airbnb_business.business.exception.exceptions.TicketAlreadyPublishedException;
+import itmo.tg.airbnb_business.business.exception.exceptions.TicketAlreadyResolvedException;
 import itmo.tg.airbnb_business.business.misc.ModelDTOConverter;
 import itmo.tg.airbnb_business.business.model.Booking;
 import itmo.tg.airbnb_business.business.model.HostDamageComplaint;
@@ -84,12 +85,29 @@ public class HostDamageComplaintService {
 
     @Transactional
     public HostDamageComplaintResponseDTO approve(Long id, User resolver) {
-
+        var ticket = hostDamageComplaintRepository.findById(id).orElseThrow(() ->
+                new NoSuchElementException("Damage complaint #" + id + " not found"));
+        if (ticket.getStatus() != TicketStatus.PENDING) {
+            throw new TicketAlreadyResolvedException("Damage complaint #" + id + " is already resolved");
+        }
+        ticket.setStatus(TicketStatus.APPROVED);
+        ticket.setResolver(resolver);
+        hostDamageComplaintRepository.save(ticket);
+        penaltyService.assignFine(ticket.getCompensationAmount(), ticket.getBooking().getGuest());
+        return ModelDTOConverter.convert(ticket);
     }
 
     @Transactional
     public HostDamageComplaintResponseDTO reject(Long id, User resolver) {
-
+        var ticket = hostDamageComplaintRepository.findById(id).orElseThrow(() ->
+                new NoSuchElementException("Damage complaint #" + id + " not found"));
+        if (ticket.getStatus() != TicketStatus.PENDING) {
+            throw new TicketAlreadyResolvedException("Damage complaint #" + id + " is already resolved");
+        }
+        ticket.setStatus(TicketStatus.REJECTED);
+        ticket.setResolver(resolver);
+        hostDamageComplaintRepository.save(ticket);
+        return ModelDTOConverter.convert(ticket);
     }
 
 }
