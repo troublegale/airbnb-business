@@ -1,6 +1,6 @@
 package itmo.tg.airbnb_business.auth.service;
 
-import itmo.tg.airbnb_business.auth.exception.exceptions.UsernameTakenException;
+import itmo.tg.airbnb_business.auth.exception.UsernameTakenException;
 import itmo.tg.airbnb_business.auth.model.User;
 import itmo.tg.airbnb_business.auth.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
