@@ -1,6 +1,5 @@
 package itmo.tg.airbnb_business.business.controller;
 
-import itmo.tg.airbnb_business.security.service.UserService;
 import itmo.tg.airbnb_business.business.dto.BookingRequestDTO;
 import itmo.tg.airbnb_business.business.dto.BookingResponseDTO;
 import itmo.tg.airbnb_business.business.exception.exceptions.AdvertisementBlockedException;
@@ -8,6 +7,7 @@ import itmo.tg.airbnb_business.business.exception.exceptions.BookOwnAdvertisemen
 import itmo.tg.airbnb_business.business.exception.exceptions.BookingDatesConflictException;
 import itmo.tg.airbnb_business.business.exception.exceptions.InvalidBookingDatesException;
 import itmo.tg.airbnb_business.business.service.BookingService;
+import itmo.tg.airbnb_business.security.service.UserService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
@@ -29,8 +29,14 @@ public class BookingController {
     public ResponseEntity<List<BookingResponseDTO>> getAll(
             @RequestParam(defaultValue = "1") @Positive Integer page,
             @RequestParam(defaultValue = "20") @Positive Integer pageSize,
-            @RequestParam(defaultValue = "false") @Valid Boolean active) {
-        var response = bookingService.getAll(page, pageSize, active);
+            @RequestParam(defaultValue = "false") @Valid Boolean active,
+            @RequestParam(required = false) Long advertId) {
+        List<BookingResponseDTO> response;
+        if (advertId != null) {
+            response = bookingService.getForAdvert(page, pageSize, active, advertId);
+        } else {
+            response = bookingService.getAll(page, pageSize, active);
+        }
         return ResponseEntity.ok(response);
     }
 
