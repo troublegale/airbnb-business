@@ -1,4 +1,4 @@
-package itmo.tg.airbnb_business.auth.model;
+package itmo.tg.airbnb_business.security.model;
 
 public enum Role {
 

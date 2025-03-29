@@ -1,8 +1,8 @@
-package itmo.tg.airbnb_business.auth.service;
+package itmo.tg.airbnb_business.security.service;
 
-import itmo.tg.airbnb_business.auth.exception.UsernameTakenException;
-import itmo.tg.airbnb_business.auth.model.User;
-import itmo.tg.airbnb_business.auth.repository.UserRepository;
+import itmo.tg.airbnb_business.security.exception.UsernameTakenException;
+import itmo.tg.airbnb_business.security.model.User;
+import itmo.tg.airbnb_business.security.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;

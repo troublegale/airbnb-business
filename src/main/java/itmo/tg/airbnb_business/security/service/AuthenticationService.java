@@ -1,9 +1,9 @@
-package itmo.tg.airbnb_business.auth.service;
+package itmo.tg.airbnb_business.security.service;
 
-import itmo.tg.airbnb_business.auth.dto.AuthRequest;
-import itmo.tg.airbnb_business.auth.dto.AuthResponse;
-import itmo.tg.airbnb_business.auth.model.Role;
-import itmo.tg.airbnb_business.auth.model.User;
+import itmo.tg.airbnb_business.security.dto.AuthRequest;
+import itmo.tg.airbnb_business.security.dto.AuthResponse;
+import itmo.tg.airbnb_business.security.model.Role;
+import itmo.tg.airbnb_business.security.model.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

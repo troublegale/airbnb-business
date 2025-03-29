@@ -1,7 +1,6 @@
-package itmo.tg.airbnb_business.auth.model;
+package itmo.tg.airbnb_business.security.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

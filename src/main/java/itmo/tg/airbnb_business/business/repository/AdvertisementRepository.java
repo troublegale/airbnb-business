@@ -1,6 +1,6 @@
 package itmo.tg.airbnb_business.business.repository;
 
-import itmo.tg.airbnb_business.auth.model.User;
+import itmo.tg.airbnb_business.security.model.User;
 import itmo.tg.airbnb_business.business.model.Advertisement;
 import itmo.tg.airbnb_business.business.model.enums.AdvertisementStatus;
 import org.springframework.data.domain.Pageable;

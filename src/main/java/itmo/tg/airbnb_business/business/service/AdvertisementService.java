@@ -1,7 +1,7 @@
 package itmo.tg.airbnb_business.business.service;
 
-import itmo.tg.airbnb_business.auth.model.Role;
-import itmo.tg.airbnb_business.auth.model.User;
+import itmo.tg.airbnb_business.security.model.Role;
+import itmo.tg.airbnb_business.security.model.User;
 import itmo.tg.airbnb_business.business.dto.AdvertisementRequestDTO;
 import itmo.tg.airbnb_business.business.dto.AdvertisementResponseDTO;
 import itmo.tg.airbnb_business.business.dto.BookingResponseDTO;

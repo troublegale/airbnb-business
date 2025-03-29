@@ -1,4 +1,4 @@
-package itmo.tg.airbnb_business.auth.dto;
+package itmo.tg.airbnb_business.security.dto;
 
 import jakarta.validation.constraints.NotNull;
 

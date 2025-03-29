@@ -1,6 +1,6 @@
 package itmo.tg.airbnb_business.business.controller;
 
-import itmo.tg.airbnb_business.auth.service.UserService;
+import itmo.tg.airbnb_business.security.service.UserService;
 import itmo.tg.airbnb_business.business.dto.GuestComplaintRequestDTO;
 import itmo.tg.airbnb_business.business.dto.GuestComplaintResponseDTO;
 import itmo.tg.airbnb_business.business.service.GuestComplaintService;

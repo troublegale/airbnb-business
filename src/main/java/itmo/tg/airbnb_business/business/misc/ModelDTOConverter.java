@@ -1,6 +1,6 @@
 package itmo.tg.airbnb_business.business.misc;
 
-import itmo.tg.airbnb_business.auth.model.User;
+import itmo.tg.airbnb_business.security.model.User;
 import itmo.tg.airbnb_business.business.dto.*;
 import itmo.tg.airbnb_business.business.model.*;
 

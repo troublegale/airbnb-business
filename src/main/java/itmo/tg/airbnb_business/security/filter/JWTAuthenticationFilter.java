@@ -1,7 +1,7 @@
-package itmo.tg.airbnb_business.auth.filter;
+package itmo.tg.airbnb_business.security.filter;
 
-import itmo.tg.airbnb_business.auth.service.JWTService;
-import itmo.tg.airbnb_business.auth.service.UserService;
+import itmo.tg.airbnb_business.security.service.JWTService;
+import itmo.tg.airbnb_business.security.service.UserService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

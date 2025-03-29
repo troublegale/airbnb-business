@@ -1,8 +1,8 @@
-package itmo.tg.airbnb_business.auth.config;
+package itmo.tg.airbnb_business.security.config;
 
-import itmo.tg.airbnb_business.auth.model.Role;
-import itmo.tg.airbnb_business.auth.model.User;
-import itmo.tg.airbnb_business.auth.repository.UserRepository;
+import itmo.tg.airbnb_business.security.model.Role;
+import itmo.tg.airbnb_business.security.model.User;
+import itmo.tg.airbnb_business.security.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationReadyEvent;

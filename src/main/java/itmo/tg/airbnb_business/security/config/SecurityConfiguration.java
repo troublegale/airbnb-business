@@ -1,7 +1,7 @@
-package itmo.tg.airbnb_business.auth.config;
+package itmo.tg.airbnb_business.security.config;
 
-import itmo.tg.airbnb_business.auth.filter.JWTAuthenticationFilter;
-import itmo.tg.airbnb_business.auth.service.UserService;
+import itmo.tg.airbnb_business.security.filter.JWTAuthenticationFilter;
+import itmo.tg.airbnb_business.security.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -1,9 +1,9 @@
-package itmo.tg.airbnb_business.auth.controller;
+package itmo.tg.airbnb_business.security.controller;
 
-import itmo.tg.airbnb_business.auth.dto.AuthRequest;
-import itmo.tg.airbnb_business.auth.dto.AuthResponse;
-import itmo.tg.airbnb_business.auth.exception.UsernameTakenException;
-import itmo.tg.airbnb_business.auth.service.AuthenticationService;
+import itmo.tg.airbnb_business.security.dto.AuthRequest;
+import itmo.tg.airbnb_business.security.dto.AuthResponse;
+import itmo.tg.airbnb_business.security.exception.UsernameTakenException;
+import itmo.tg.airbnb_business.security.service.AuthenticationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

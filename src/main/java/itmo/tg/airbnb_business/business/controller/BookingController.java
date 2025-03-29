@@ -1,6 +1,6 @@
 package itmo.tg.airbnb_business.business.controller;
 
-import itmo.tg.airbnb_business.auth.service.UserService;
+import itmo.tg.airbnb_business.security.service.UserService;
 import itmo.tg.airbnb_business.business.dto.BookingRequestDTO;
 import itmo.tg.airbnb_business.business.dto.BookingResponseDTO;
 import itmo.tg.airbnb_business.business.exception.exceptions.AdvertisementBlockedException;
