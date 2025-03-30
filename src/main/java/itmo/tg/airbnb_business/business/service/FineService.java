@@ -33,7 +33,7 @@ public class FineService {
 
     public List<FineDTO> getAssignedTo(User user, Integer page, Integer pageSize, Boolean active) {
         List<Fine> fines;
-        Pageable pageable = PageRequest.of(page, pageSize, Sort.by("id"));
+        Pageable pageable = PageRequest.of(page - 1, pageSize, Sort.by("id"));
         if (active) {
             fines = fineRepository.findByUserAndStatus(user, FineStatus.ACTIVE, pageable).getContent();
         } else {

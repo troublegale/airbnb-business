@@ -35,7 +35,7 @@ public class Fine {
     @Column(name = "ticket_id", nullable = false)
     private Long ticketId;
 
-    @Column(name = "ticket_type", nullable = false)
+    @Column(name = "fine_reason", nullable = false)
     @Enumerated(EnumType.STRING)
     private FineReason fineReason;
 

@@ -135,8 +135,8 @@ public class BookingService {
         }
 
         var advert = booking.getAdvertisement();
-        penaltyService.blockAndAssignFine(
-                advert, -1L, FineReason.SELF, booking.getStartDate(), booking.getEndDate(), user);
+        penaltyService.blockAndAssignFine(advert, -1L, FineReason.SELF,
+                LocalDate.now(), booking.getStartDate(), booking.getEndDate(), user);
         booking.setStatus(BookingStatus.CANCELLED);
         bookingRepository.save(booking);
         return "You cancelled booking #" + id + " as a host.\n" +

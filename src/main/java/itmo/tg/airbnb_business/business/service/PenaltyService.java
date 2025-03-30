@@ -27,7 +27,7 @@ public class PenaltyService {
 
     @Transactional
     public void blockAndAssignFine(Advertisement advertisement, Long ticketId, FineReason fineReason,
-                                   LocalDate startDate, LocalDate endDate, User host) {
+                                   LocalDate assigningDate, LocalDate startDate, LocalDate endDate, User host) {
         var block = AdvertisementBlock.builder()
                 .advertisement(advertisement)
                 .dateUntil(endDate)
@@ -39,7 +39,7 @@ public class PenaltyService {
         }
 
         var amount = calculateFineAmount(
-                startDate, endDate, advertisement.getBookPrice(), advertisement.getPricePerNight());
+                assigningDate, startDate, endDate, advertisement.getBookPrice(), advertisement.getPricePerNight());
         assignFine(amount, host, ticketId, fineReason);
     }
 
@@ -72,18 +72,23 @@ public class PenaltyService {
     }
 
     private double calculateFineAmount(
-            LocalDate startDate, LocalDate endDate, Integer bookPrice, Integer pricePerNight) {
-        var now = LocalDate.now();
+            LocalDate assigningDate, LocalDate startDate, LocalDate endDate, Integer bookPrice, Integer pricePerNight) {
         double amount;
-        if (ChronoUnit.DAYS.between(now, startDate) <= 2 || startDate.isAfter(now)) {
-            var nights = (int) ChronoUnit.DAYS.between(now, endDate) + 1;
-            amount = pricePerNight * nights / 2.0;
-        } else if (ChronoUnit.DAYS.between(now, startDate) <= 30) {
+        long nights;
+        if (assigningDate.isAfter(startDate)) {
+            nights = ChronoUnit.DAYS.between(assigningDate, endDate) + 1;
+            amount = nights * pricePerNight / 2.0;
+        } else if (ChronoUnit.DAYS.between(assigningDate, startDate) <= 2) {
+            nights = ChronoUnit.DAYS.between(startDate, endDate) + 1;
+            amount = nights * pricePerNight / 2.0;
+        } else if (ChronoUnit.DAYS.between(assigningDate, startDate) <= 30) {
             amount = bookPrice / 4.0;
         } else {
             amount = bookPrice / 10.0;
         }
-        if (amount < 50) amount = 50;
+        if (amount < 50) {
+            amount = 50;
+        }
         return amount;
     }
 

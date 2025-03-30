@@ -75,6 +75,7 @@ public class ModelDTOConverter {
         return GuestComplaintResponseDTO.builder()
                 .id(complaint.getId())
                 .guestUsername(complaint.getGuest().getUsername())
+                .advertisementId(complaint.getAdvertisement().getId())
                 .bookingId(complaint.getBooking().getId())
                 .proofLink(complaint.getProofLink())
                 .date(complaint.getDate())
@@ -116,6 +117,17 @@ public class ModelDTOConverter {
 
     public static List<HostJustificationResponseDTO> toHostJustificationDTOList(List<HostJustification> justifications) {
         return justifications.stream().map(ModelDTOConverter::convert).toList();
+    }
+
+    public static AdvertisementBlockDTO convert(AdvertisementBlock block) {
+        return AdvertisementBlockDTO.builder()
+                .advertisementId(block.getAdvertisement().getId())
+                .dateUntil(block.getDateUntil())
+                .build();
+    }
+
+    public static List<AdvertisementBlockDTO> toAdvertisementBlockDTOList(List<AdvertisementBlock> blocks) {
+        return blocks.stream().map(ModelDTOConverter::convert).toList();
     }
 
 }

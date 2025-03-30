@@ -20,6 +20,8 @@ public class GuestComplaintResponseDTO {
 
     private String guestUsername;
 
+    private Long advertisementId;
+
     private Long bookingId;
 
     private String proofLink;

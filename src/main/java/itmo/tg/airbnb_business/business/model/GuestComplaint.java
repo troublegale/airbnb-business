@@ -26,6 +26,10 @@ public class GuestComplaint {
     @ManyToOne
     private User guest;
 
+    @JoinColumn(name = "advertisement_id", nullable = false)
+    @ManyToOne
+    private Advertisement advertisement;
+
     @JoinColumn(name = "booking_id", nullable = false)
     @ManyToOne
     private Booking booking;
