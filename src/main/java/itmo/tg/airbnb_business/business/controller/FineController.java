@@ -23,21 +23,19 @@ public class FineController {
     private final UserService userService;
 
     @GetMapping
-    public ResponseEntity<List<FineDTO>> getAll(
+    public List<FineDTO> getAll(
             @RequestParam(defaultValue = "1") @Positive Integer page,
             @RequestParam(defaultValue = "20") @Positive Integer pageSize,
             @RequestParam(defaultValue = "false") @Valid Boolean active) {
-        var response = fineService.getAll(page, pageSize, active);
-        return ResponseEntity.ok(response);
+        return fineService.getAll(page, pageSize, active);
     }
 
     @GetMapping("/my")
-    public ResponseEntity<List<FineDTO>> getAssigned(
+    public List<FineDTO> getAssigned(
             @RequestParam(defaultValue = "1") @Positive Integer page,
             @RequestParam(defaultValue = "20") @Positive Integer pageSize,
             @RequestParam(defaultValue = "true") @Valid Boolean active) {
-        var response = fineService.getAssignedTo(userService.getCurrentUser(), page, pageSize, active);
-        return ResponseEntity.ok(response);
+        return fineService.getAssignedTo(userService.getCurrentUser(), page, pageSize, active);
     }
 
 }

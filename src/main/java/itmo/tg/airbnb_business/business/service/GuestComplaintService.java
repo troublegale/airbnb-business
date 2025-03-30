@@ -36,9 +36,15 @@ public class GuestComplaintService {
     private final BookingRepository bookingRepository;
     private final PenaltyService penaltyService;
 
-    public List<GuestComplaintResponseDTO> get(Integer page, Integer pageSize, String filter) {
+    public GuestComplaintResponseDTO get(Long id) {
+        var ticket = guestComplaintRepository.findById(id).orElseThrow(() ->
+                new NoSuchElementException("Guest complaint #" + id + " not found"));
+        return ModelDTOConverter.convert(ticket);
+    }
+
+    public List<GuestComplaintResponseDTO> getList(Integer page, Integer pageSize, String filter) {
         List<GuestComplaint> complaints;
-        Pageable pageable = PageRequest.of(page, pageSize, Sort.by("id"));
+        Pageable pageable = PageRequest.of(page - 1, pageSize, Sort.by("id"));
         if (filter.equalsIgnoreCase("pending")) {
             complaints = guestComplaintRepository.findByStatus(TicketStatus.PENDING, pageable).getContent();
         } else if (filter.equalsIgnoreCase("resolved")) {
@@ -52,7 +58,7 @@ public class GuestComplaintService {
 
     public List<GuestComplaintResponseDTO> getOwned(User guest, Integer page, Integer pageSize, String filter) {
         List<GuestComplaint> complaints;
-        Pageable pageable = PageRequest.of(page, pageSize, Sort.by("id"));
+        Pageable pageable = PageRequest.of(page - 1, pageSize, Sort.by("id"));
         if (filter.equalsIgnoreCase("pending")) {
             complaints = guestComplaintRepository.findByGuestAndStatus(guest, TicketStatus.PENDING, pageable).getContent();
         } else if (filter.equalsIgnoreCase("resolved")) {

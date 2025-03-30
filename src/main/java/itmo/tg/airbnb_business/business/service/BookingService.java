@@ -50,19 +50,6 @@ public class BookingService {
         return ModelDTOConverter.toBookingDTOList(bookings);
     }
 
-    public List<BookingResponseDTO> getForAdvert(Integer page, Integer pageSize, Boolean active, Long advertId) {
-        var advert = advertisementRepository.findById(advertId).orElseThrow(() ->
-                new NoSuchElementException("Advertisement #" + advertId + " not found"));
-        List<Booking> bookings;
-        Pageable pageable = PageRequest.of(page - 1, pageSize, Sort.by("id"));
-        if (active) {
-            bookings = bookingRepository.findByAdvertisementAndStatus(advert, BookingStatus.ACTIVE, pageable).getContent();
-        } else {
-            bookings = bookingRepository.findByAdvertisement(advert, pageable).getContent();
-        }
-        return ModelDTOConverter.toBookingDTOList(bookings);
-    }
-
     public List<BookingResponseDTO> getOwned(User guest, Integer page, Integer pageSize, Boolean active) {
         List<Booking> bookings;
         Pageable pageable = PageRequest.of(page - 1, pageSize, Sort.by("id"));

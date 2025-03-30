@@ -28,70 +28,75 @@ public class AdminController {
     private final UserService userService;
 
     @GetMapping("/guest-complaints")
-    public ResponseEntity<List<GuestComplaintResponseDTO>> getGuestComplaints(
+    public List<GuestComplaintResponseDTO> getGuestComplaints(
             @RequestParam(defaultValue = "1") @Positive Integer page,
             @RequestParam(defaultValue = "20") @Positive Integer pageSize,
             @RequestParam(defaultValue = "all") @Pattern(regexp = "all|pending|resolved") String filter) {
-        var response = guestComplaintService.get(page, pageSize, filter);
-        return ResponseEntity.ok(response);
+        return guestComplaintService.getList(page, pageSize, filter);
     }
 
-    @PostMapping("/guest-complaints/{id}/approve")
-    public ResponseEntity<GuestComplaintResponseDTO> approveGuestComplaint(@PathVariable Long id) {
-        var response = guestComplaintService.approve(id, userService.getCurrentUser());
-        return ResponseEntity.ok(response);
+    @GetMapping("/guest-complaints/{id}")
+    public GuestComplaintResponseDTO getGuestComplaint(@PathVariable Long id) {
+        return guestComplaintService.get(id);
     }
 
-    @PostMapping("/guest-complaints/{id}/reject")
-    public ResponseEntity<GuestComplaintResponseDTO> rejectGuestComplaint(@PathVariable Long id) {
-        var response = guestComplaintService.reject(id, userService.getCurrentUser());
-        return ResponseEntity.ok(response);
+    @PostMapping("/guest-complaints/{id}")
+    public GuestComplaintResponseDTO approveGuestComplaint(@PathVariable Long id) {
+        return guestComplaintService.approve(id, userService.getCurrentUser());
+    }
+
+    @PutMapping("/guest-complaints/{id}")
+    public GuestComplaintResponseDTO rejectGuestComplaint(@PathVariable Long id) {
+        return guestComplaintService.reject(id, userService.getCurrentUser());
     }
 
     @GetMapping("/damage-complaints")
-    public ResponseEntity<List<HostDamageComplaintResponseDTO>> getDamageComplaints(
+    public List<HostDamageComplaintResponseDTO> getDamageComplaints(
             @RequestParam(defaultValue = "1") @Positive Integer page,
             @RequestParam(defaultValue = "20") @Positive Integer pageSize,
             @RequestParam(defaultValue = "all") @Pattern(regexp = "all|pending|resolved") String filter) {
-        var response = hostDamageComplaintService.get(page, pageSize, filter);
-        return ResponseEntity.ok(response);
+        return hostDamageComplaintService.getList(page, pageSize, filter);
     }
 
-    @PostMapping("/damage-complaints/{id}/approve")
-    public ResponseEntity<HostDamageComplaintResponseDTO> approveHostDamageComplaint(@PathVariable Long id) {
-        var response = hostDamageComplaintService.approve(id, userService.getCurrentUser());
-        return ResponseEntity.ok(response);
+    @GetMapping("/damage-complaints/{id}")
+    public HostDamageComplaintResponseDTO getDamageComplaint(@PathVariable Long id) {
+        return hostDamageComplaintService.get(id);
     }
 
-    @PostMapping("/damage-complaints/{id}/reject")
-    public ResponseEntity<HostDamageComplaintResponseDTO> rejectHostDamageComplaint(@PathVariable Long id) {
-        var response = hostDamageComplaintService.reject(id, userService.getCurrentUser());
-        return ResponseEntity.ok(response);
+    @PostMapping("/damage-complaints/{id}")
+    public HostDamageComplaintResponseDTO approveHostDamageComplaint(@PathVariable Long id) {
+        return hostDamageComplaintService.approve(id, userService.getCurrentUser());
     }
 
-    @GetMapping("/host-justifications")
-    public ResponseEntity<List<HostJustificationResponseDTO>> getHostJustifications(
+    @PutMapping("/damage-complaints/{id}")
+    public HostDamageComplaintResponseDTO rejectHostDamageComplaint(@PathVariable Long id) {
+        return hostDamageComplaintService.reject(id, userService.getCurrentUser());
+    }
+
+    @GetMapping("/justifications")
+    public List<HostJustificationResponseDTO> getHostJustifications(
             @RequestParam(defaultValue = "1") @Positive Integer page,
             @RequestParam(defaultValue = "20") @Positive Integer pageSize,
             @RequestParam(defaultValue = "all") @Pattern(regexp = "all|pending|resolved") String filter) {
-        var response = hostJustificationService.get(page, pageSize, filter);
-        return ResponseEntity.ok(response);
+        return hostJustificationService.getList(page, pageSize, filter);
     }
 
-    @PostMapping("/host-justifications/{id}/approve")
-    public ResponseEntity<HostJustificationResponseDTO> approveHostJustification(@PathVariable Long id) {
-        var response = hostJustificationService.approve(id, userService.getCurrentUser());
-        return ResponseEntity.ok(response);
+    @GetMapping("/justifications/{id}")
+    public HostJustificationResponseDTO getHostJustification(@PathVariable Long id) {
+        return hostJustificationService.get(id);
     }
 
-    @PostMapping("/host-justifications/{id}/reject")
-    public ResponseEntity<HostJustificationResponseDTO> rejectHostJustification(@PathVariable Long id) {
-        var response = hostJustificationService.reject(id, userService.getCurrentUser());
-        return ResponseEntity.ok(response);
+    @PostMapping("/justifications/{id}")
+    public HostJustificationResponseDTO approveHostJustification(@PathVariable Long id) {
+        return hostJustificationService.approve(id, userService.getCurrentUser());
+    }
+
+    @PutMapping("/justifications/{id}")
+    public HostJustificationResponseDTO rejectHostJustification(@PathVariable Long id) {
+        return hostJustificationService.reject(id, userService.getCurrentUser());
     }
 
     @ExceptionHandler(TicketAlreadyResolvedException.class)
-    @ResponseStatus(HttpStatus.CONFLICT)
     public ResponseEntity<String> handleTicketAlreadyResolvedException(TicketAlreadyResolvedException ex) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
     }

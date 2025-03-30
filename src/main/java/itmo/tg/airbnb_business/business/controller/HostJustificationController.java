@@ -21,19 +21,17 @@ public class HostJustificationController {
     private final UserService userService;
 
     @GetMapping("/my")
-    public ResponseEntity<List<HostJustificationResponseDTO>> getOwned(
+    public List<HostJustificationResponseDTO> getOwned(
             @RequestParam(defaultValue = "1") Integer page,
             @RequestParam(defaultValue = "20") Integer pageSize,
             @RequestParam(defaultValue = "all") @Pattern(regexp = "all|pending|resolved") String filter) {
-        var response = hostJustificationService.getOwned(userService.getCurrentUser(), page, pageSize, filter);
-        return ResponseEntity.ok(response);
+        return hostJustificationService.getOwned(userService.getCurrentUser(), page, pageSize, filter);
     }
 
-    @PostMapping("/publish")
-    public ResponseEntity<HostJustificationResponseDTO> publish(
+    @PostMapping
+    public HostJustificationResponseDTO publish(
             @RequestBody @Valid HostJustificationRequestDTO dto) {
-        var response = hostJustificationService.create(dto, userService.getCurrentUser());
-        return ResponseEntity.ok(response);
+        return hostJustificationService.create(dto, userService.getCurrentUser());
     }
 
 }

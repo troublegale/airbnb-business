@@ -18,6 +18,6 @@ public interface FineRepository extends JpaRepository<Fine, Long> {
 
     Page<Fine> findByUserAndStatus(User user, FineStatus status, Pageable pageable);
 
-    Fine findByTicketIdAndFineReason(Long ticketId, FineReason type);
+    Fine findByTicketIdAndFineReason(Long ticketId, FineReason reason);
 
 }

@@ -26,76 +26,67 @@ public class AdvertisementController {
     private final GuestComplaintService guestComplaintService;
 
     @GetMapping
-    public ResponseEntity<List<AdvertisementResponseDTO>> getAll(
+    public List<AdvertisementResponseDTO> getAll(
             @RequestParam(defaultValue = "1") @Positive Integer page,
             @RequestParam(defaultValue = "20") @Positive Integer pageSize,
             @RequestParam(defaultValue = "false") @Valid Boolean active
     ) {
-        var response = advertisementService.getAll(page, pageSize, active);
-        return ResponseEntity.ok(response);
+        return advertisementService.getAll(page, pageSize, active);
     }
 
     @GetMapping("/my")
-    public ResponseEntity<List<AdvertisementResponseDTO>> getOwned(
+    public List<AdvertisementResponseDTO> getOwned(
             @RequestParam(defaultValue = "1") @Positive Integer page,
             @RequestParam(defaultValue = "20") @Positive Integer pageSize,
             @RequestParam(defaultValue = "false") @Valid Boolean active) {
-        var response = advertisementService.getOwned(userService.getCurrentUser(), page, pageSize, active);
-        return ResponseEntity.ok(response);
+        return advertisementService.getOwned(userService.getCurrentUser(), page, pageSize, active);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<AdvertisementResponseDTO> get(@PathVariable Long id) {
-        var response = advertisementService.get(id);
-        return ResponseEntity.ok(response);
+    public AdvertisementResponseDTO get(@PathVariable Long id) {
+        return advertisementService.get(id);
     }
 
     @GetMapping("/{id}/complaints")
-    public ResponseEntity<List<GuestComplaintResponseDTO>> getComplaintForAdvert(
+    public List<GuestComplaintResponseDTO> getComplaintForAdvert(
             @PathVariable Long id,
             @RequestParam(defaultValue = "1") @Positive Integer page,
             @RequestParam(defaultValue = "20") @Positive Integer pageSize,
             @RequestParam(defaultValue = "true") @Valid Boolean approved) {
-        var response = guestComplaintService.getForAdvertisement(id, page, pageSize, approved, userService.getCurrentUser());
-        return ResponseEntity.ok(response);
+        return guestComplaintService.getForAdvertisement(id, page, pageSize, approved, userService.getCurrentUser());
     }
 
     @GetMapping("/{id}/blocks")
-    public ResponseEntity<List<AdvertisementBlockDTO>> getBlocksForAdvert(
+    public List<AdvertisementBlockDTO> getBlocksForAdvert(
             @PathVariable Long id,
             @RequestParam(defaultValue = "1") @Positive Integer page,
             @RequestParam(defaultValue = "20") @Positive Integer pageSize) {
-        var response = advertisementBlockService.getForAdvert(id, page, pageSize, userService.getCurrentUser());
-        return ResponseEntity.ok(response);
+        return advertisementBlockService.getForAdvert(id, page, pageSize, userService.getCurrentUser());
     }
 
     @GetMapping("/{id}/bookings")
-    public ResponseEntity<List<BookingResponseDTO>> getBookings(
+    public List<BookingResponseDTO> getBookings(
             @PathVariable Long id,
             @RequestParam(defaultValue = "1") @Positive Integer page,
             @RequestParam(defaultValue = "20") @Positive Integer pageSize,
             @RequestParam(defaultValue = "false") @Valid Boolean active) {
-        var response = advertisementService.getBookings(id, page, pageSize, active);
-        return ResponseEntity.ok(response);
+        return advertisementService.getBookings(id, page, pageSize, active);
     }
 
-    @PostMapping("/create")
-    public ResponseEntity<AdvertisementResponseDTO> create(
+    @PostMapping
+    public AdvertisementResponseDTO create(
             @RequestBody @Valid AdvertisementRequestDTO dto) {
-        var response = advertisementService.create(dto, userService.getCurrentUser());
-        return ResponseEntity.ok(response);
+        return advertisementService.create(dto, userService.getCurrentUser());
     }
 
-    @PutMapping("/{id}/update")
-    public ResponseEntity<AdvertisementResponseDTO> update(
+    @PutMapping("/{id}")
+    public AdvertisementResponseDTO update(
             @PathVariable Long id,
             @RequestBody @Valid AdvertisementRequestDTO dto) {
-        var response = advertisementService.update(id, dto, userService.getCurrentUser());
-        return ResponseEntity.ok(response);
+        return advertisementService.update(id, dto, userService.getCurrentUser());
     }
 
     @ExceptionHandler(ActiveBookingsException.class)
-    @ResponseStatus(HttpStatus.CONFLICT)
     public ResponseEntity<String> handleActiveBookingsException(ActiveBookingsException ex) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
     }

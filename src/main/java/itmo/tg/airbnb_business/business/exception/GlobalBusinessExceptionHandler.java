@@ -16,19 +16,16 @@ import java.util.NoSuchElementException;
 public class GlobalBusinessExceptionHandler {
 
     @ExceptionHandler(NotAllowedException.class)
-    @ResponseStatus(HttpStatus.FORBIDDEN)
     public ResponseEntity<String> handleNotAllowedException(NotAllowedException ex) {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ex.getMessage());
     }
 
     @ExceptionHandler(NoSuchElementException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
     public ResponseEntity<String> handleNoSuchElementException(NoSuchElementException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<String> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
 
         var fieldErrors = ex.getFieldErrors();
@@ -61,7 +58,6 @@ public class GlobalBusinessExceptionHandler {
     }
 
     @ExceptionHandler(TicketAlreadyPublishedException.class)
-    @ResponseStatus(HttpStatus.CONFLICT)
     public ResponseEntity<String> handleTicketAlreadyPublishedException(TicketAlreadyPublishedException ex) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
     }

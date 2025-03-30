@@ -40,7 +40,7 @@ public class StatusUpdater {
 
         var blocks = advertisementBlockRepository.findAll();
         for (var block : blocks) {
-            if (block.getDateUntil().isAfter(LocalDate.now())) {
+            if (LocalDate.now().isAfter(block.getDateUntil())) {
                 var advert = block.getAdvertisement();
                 advert.setStatus(AdvertisementStatus.ACTIVE);
                 advertisementRepository.save(advert);
@@ -50,7 +50,7 @@ public class StatusUpdater {
 
         var bookings = bookingRepository.findByStatus(BookingStatus.ACTIVE);
         for (var booking : bookings) {
-            if (booking.getEndDate().isAfter(LocalDate.now())) {
+            if (LocalDate.now().isAfter(booking.getEndDate())) {
                 booking.setStatus(BookingStatus.EXPIRED);
                 bookingRepository.save(booking);
             }

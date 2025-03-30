@@ -24,23 +24,20 @@ public class GuestComplaintController {
     private final UserService userService;
 
     @GetMapping("/my")
-    public ResponseEntity<List<GuestComplaintResponseDTO>> getOwned(
+    public List<GuestComplaintResponseDTO> getOwned(
             @RequestParam(defaultValue = "1") @Positive Integer page,
             @RequestParam(defaultValue = "20") @Positive Integer pageSize,
             @RequestParam(defaultValue = "all") @Pattern(regexp = "all|pending|resolved") String filter) {
-        var response = guestComplaintService.getOwned(userService.getCurrentUser(), page, pageSize, filter);
-        return ResponseEntity.ok(response);
+        return guestComplaintService.getOwned(userService.getCurrentUser(), page, pageSize, filter);
     }
 
-    @PostMapping("/publish")
-    public ResponseEntity<GuestComplaintResponseDTO> publish(
+    @PostMapping
+    public GuestComplaintResponseDTO publish(
             @RequestBody @Valid GuestComplaintRequestDTO guestComplaintRequestDTO) {
-        var response = guestComplaintService.create(guestComplaintRequestDTO, userService.getCurrentUser());
-        return ResponseEntity.ok(response);
+        return guestComplaintService.create(guestComplaintRequestDTO, userService.getCurrentUser());
     }
 
     @ExceptionHandler(BookingAlreadyExpiredException.class)
-    @ResponseStatus(HttpStatus.CONFLICT)
     public ResponseEntity<String> handleBookingAlreadyExpiredException(BookingAlreadyExpiredException e) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
     }

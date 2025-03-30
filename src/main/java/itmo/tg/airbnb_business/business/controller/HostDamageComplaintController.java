@@ -21,19 +21,17 @@ public class HostDamageComplaintController {
     private final UserService userService;
 
     @GetMapping("/my")
-    public ResponseEntity<List<HostDamageComplaintResponseDTO>> getOwned(
+    public List<HostDamageComplaintResponseDTO> getOwned(
             @RequestParam(defaultValue = "1") Integer page,
             @RequestParam(defaultValue = "20") Integer pageSize,
             @RequestParam(defaultValue = "all") @Pattern(regexp = "all|pending|resolved") String filter) {
-        var response = hostDamageComplaintService.getOwned(userService.getCurrentUser(), page, pageSize, filter);
-        return ResponseEntity.ok(response);
+        return hostDamageComplaintService.getOwned(userService.getCurrentUser(), page, pageSize, filter);
     }
 
-    @PostMapping("/publish")
-    public ResponseEntity<HostDamageComplaintResponseDTO> publish(
+    @PostMapping
+    public HostDamageComplaintResponseDTO publish(
             @RequestBody @Valid HostDamageComplaintRequestDTO dto) {
-        var response = hostDamageComplaintService.create(dto, userService.getCurrentUser());
-        return ResponseEntity.ok(response);
+        return hostDamageComplaintService.create(dto, userService.getCurrentUser());
     }
 
 }

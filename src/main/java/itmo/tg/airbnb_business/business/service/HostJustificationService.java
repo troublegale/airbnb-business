@@ -2,6 +2,7 @@ package itmo.tg.airbnb_business.business.service;
 
 import itmo.tg.airbnb_business.business.dto.HostJustificationRequestDTO;
 import itmo.tg.airbnb_business.business.dto.HostJustificationResponseDTO;
+import itmo.tg.airbnb_business.business.exception.exceptions.NotAllowedException;
 import itmo.tg.airbnb_business.business.exception.exceptions.TicketAlreadyPublishedException;
 import itmo.tg.airbnb_business.business.exception.exceptions.TicketAlreadyResolvedException;
 import itmo.tg.airbnb_business.business.misc.ModelDTOConverter;
@@ -30,9 +31,15 @@ public class HostJustificationService {
     private final GuestComplaintRepository guestComplaintRepository;
     private final PenaltyService penaltyService;
 
-    public List<HostJustificationResponseDTO> get(Integer page, Integer pageSize, String filter) {
+    public HostJustificationResponseDTO get(Long id) {
+        var ticket = hostJustificationRepository.findById(id).orElseThrow(() ->
+                new NoSuchElementException("Justification #" + id + " not found"));
+        return ModelDTOConverter.convert(ticket);
+    }
+
+    public List<HostJustificationResponseDTO> getList(Integer page, Integer pageSize, String filter) {
         List<HostJustification> justifications;
-        Pageable pageable = PageRequest.of(page, pageSize, Sort.by("id"));
+        Pageable pageable = PageRequest.of(page - 1, pageSize, Sort.by("id"));
         if (filter.equalsIgnoreCase("pending")) {
             justifications = hostJustificationRepository.findByStatus(TicketStatus.PENDING, pageable).getContent();
         } else if (filter.equalsIgnoreCase("resolved")) {
@@ -46,7 +53,7 @@ public class HostJustificationService {
 
     public List<HostJustificationResponseDTO> getOwned(User host, Integer page, Integer pageSize, String filter) {
         List<HostJustification> justifications;
-        Pageable pageable = PageRequest.of(page, pageSize, Sort.by("id"));
+        Pageable pageable = PageRequest.of(page - 1, pageSize, Sort.by("id"));
         if (filter.equalsIgnoreCase("pending")) {
             justifications = hostJustificationRepository.findByHostAndStatus(host, TicketStatus.PENDING, pageable).getContent();
         } else if (filter.equalsIgnoreCase("resolved")) {
@@ -75,6 +82,11 @@ public class HostJustificationService {
     }
 
     private void verifyJustification(GuestComplaint complaint, User host) {
+        var advert = complaint.getAdvertisement();
+        if (!advert.getHost().equals(host)) {
+            throw new NotAllowedException(
+                    "You do not own advertisement #" + advert.getId() + " mentioned in complaint #" + complaint.getId());
+        }
         var exists = hostJustificationRepository
                 .existsByComplaintAndHostAndStatusNot(complaint, host, TicketStatus.REJECTED);
         if (exists) {
@@ -95,7 +107,7 @@ public class HostJustificationService {
         hostJustificationRepository.save(ticket);
         var booking = ticket.getComplaint().getBooking();
         var advert = booking.getAdvertisement();
-        penaltyService.retractPenalty(advert, booking.getEndDate(), ticket.getId(), FineReason.GUEST);
+        penaltyService.retractPenalty(advert, booking.getEndDate(), ticket.getComplaint().getId(), FineReason.GUEST);
         return ModelDTOConverter.convert(ticket);
     }
 

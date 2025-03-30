@@ -30,9 +30,15 @@ public class HostDamageComplaintService {
     private final BookingRepository bookingRepository;
     private final PenaltyService penaltyService;
 
-    public List<HostDamageComplaintResponseDTO> get(Integer page, Integer pageSize, String filter) {
+    public HostDamageComplaintResponseDTO get(Long id) {
+        var ticket = hostDamageComplaintRepository.findById(id).orElseThrow(() ->
+                new NoSuchElementException("Damage complaint #" + id + " not found"));
+        return ModelDTOConverter.convert(ticket);
+    }
+
+    public List<HostDamageComplaintResponseDTO> getList(Integer page, Integer pageSize, String filter) {
         List<HostDamageComplaint> complaints;
-        Pageable pageable = PageRequest.of(page, pageSize, Sort.by("id"));
+        Pageable pageable = PageRequest.of(page - 1, pageSize, Sort.by("id"));
         if (filter.equalsIgnoreCase("pending")) {
             complaints = hostDamageComplaintRepository.findByStatus(TicketStatus.PENDING, pageable).getContent();
         } else if (filter.equalsIgnoreCase("resolved")) {
@@ -46,7 +52,7 @@ public class HostDamageComplaintService {
 
     public List<HostDamageComplaintResponseDTO> getOwned(User host, Integer page, Integer pageSize, String filter) {
         List<HostDamageComplaint> complaints;
-        Pageable pageable = PageRequest.of(page, pageSize, Sort.by("id"));
+        Pageable pageable = PageRequest.of(page - 1, pageSize, Sort.by("id"));
         if (filter.equalsIgnoreCase("pending")) {
             complaints = hostDamageComplaintRepository.findByHostAndStatus(host, TicketStatus.PENDING, pageable).getContent();
         } else if (filter.equalsIgnoreCase("resolved")) {
