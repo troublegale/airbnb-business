@@ -28,15 +28,11 @@ public class StatusUpdater {
 
     private void doMonitoring() {
         while (true) {
-            doStatusUpdate();
-            try {
-                Thread.sleep(1000 * 60 * 60);
-            } catch (InterruptedException ignored) {
-            }
+            updateAndWait();
         }
     }
 
-    private void doStatusUpdate() {
+    private void updateAndWait() {
 
         var blocks = advertisementBlockRepository.findAll();
         for (var block : blocks) {
@@ -54,6 +50,11 @@ public class StatusUpdater {
                 booking.setStatus(BookingStatus.EXPIRED);
                 bookingRepository.save(booking);
             }
+        }
+
+        try {
+            Thread.sleep(1000 * 60 * 60);
+        } catch (InterruptedException ignored) {
         }
 
     }
