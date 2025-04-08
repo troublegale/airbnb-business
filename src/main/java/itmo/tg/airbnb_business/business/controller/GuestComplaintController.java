@@ -1,5 +1,7 @@
 package itmo.tg.airbnb_business.business.controller;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import itmo.tg.airbnb_business.business.dto.GuestComplaintRequestDTO;
 import itmo.tg.airbnb_business.business.dto.GuestComplaintResponseDTO;
 import itmo.tg.airbnb_business.business.exception.exceptions.BookingAlreadyExpiredException;
@@ -18,6 +20,11 @@ import java.util.List;
 @RestController
 @RequestMapping("/guest-complaints")
 @RequiredArgsConstructor
+@SecurityRequirement(name = "bearerAuth")
+@Tag(
+        name = "Guest complaints",
+        description = "Publish complaints on advertisements during bookings"
+)
 public class GuestComplaintController {
 
     private final GuestComplaintService guestComplaintService;

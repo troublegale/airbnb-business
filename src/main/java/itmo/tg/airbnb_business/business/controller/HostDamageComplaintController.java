@@ -1,5 +1,7 @@
 package itmo.tg.airbnb_business.business.controller;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import itmo.tg.airbnb_business.business.dto.HostDamageComplaintRequestDTO;
 import itmo.tg.airbnb_business.business.dto.HostDamageComplaintResponseDTO;
 import itmo.tg.airbnb_business.business.service.HostDamageComplaintService;
@@ -14,6 +16,11 @@ import java.util.List;
 @RestController
 @RequestMapping("/damage-complaints")
 @RequiredArgsConstructor
+@SecurityRequirement(name = "bearerAuth")
+@Tag(
+        name = "Host damage complaints",
+        description = "Publish complaints on guest to receive compensation"
+)
 public class HostDamageComplaintController {
 
     private final HostDamageComplaintService hostDamageComplaintService;

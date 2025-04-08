@@ -1,5 +1,7 @@
 package itmo.tg.airbnb_business.business.controller;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import itmo.tg.airbnb_business.business.dto.HostJustificationRequestDTO;
 import itmo.tg.airbnb_business.business.dto.HostJustificationResponseDTO;
 import itmo.tg.airbnb_business.business.service.HostJustificationService;
@@ -14,6 +16,11 @@ import java.util.List;
 @RestController
 @RequestMapping("/justifications")
 @RequiredArgsConstructor
+@SecurityRequirement(name = "bearerAuth")
+@Tag(
+        name = "Host justifications",
+        description = "Oppose guest complaints and retract penalties"
+)
 public class HostJustificationController {
 
     private final HostJustificationService hostJustificationService;

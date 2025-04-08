@@ -1,5 +1,7 @@
 package itmo.tg.airbnb_business.business.controller;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import itmo.tg.airbnb_business.business.dto.FineDTO;
 import itmo.tg.airbnb_business.business.service.FineService;
 import itmo.tg.airbnb_business.security.service.UserService;
@@ -16,6 +18,11 @@ import java.util.List;
 @RestController
 @RequestMapping("/fines")
 @RequiredArgsConstructor
+@SecurityRequirement(name = "bearerAuth")
+@Tag(
+        name = "Fines",
+        description = "See fines assigned to you"
+)
 public class FineController {
 
     private final FineService fineService;

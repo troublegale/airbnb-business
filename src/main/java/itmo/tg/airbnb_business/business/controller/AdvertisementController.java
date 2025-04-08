@@ -1,5 +1,7 @@
 package itmo.tg.airbnb_business.business.controller;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import itmo.tg.airbnb_business.business.dto.*;
 import itmo.tg.airbnb_business.business.exception.exceptions.ActiveBookingsException;
 import itmo.tg.airbnb_business.business.service.AdvertisementBlockService;
@@ -18,6 +20,11 @@ import java.util.List;
 @RestController
 @RequestMapping("/advertisements")
 @RequiredArgsConstructor
+@SecurityRequirement(name = "bearerAuth")
+@Tag(
+        name = "Advertisements",
+        description = "Create and update advertisements, see bookings and complaints"
+)
 public class AdvertisementController {
 
     private final AdvertisementService advertisementService;

@@ -1,5 +1,7 @@
 package itmo.tg.airbnb_business.business.controller;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import itmo.tg.airbnb_business.business.dto.GuestComplaintResponseDTO;
 import itmo.tg.airbnb_business.business.dto.HostDamageComplaintResponseDTO;
 import itmo.tg.airbnb_business.business.dto.HostJustificationResponseDTO;
@@ -20,6 +22,11 @@ import java.util.List;
 @RestController
 @RequestMapping("/admin")
 @RequiredArgsConstructor
+@SecurityRequirement(name = "bearerAuth")
+@Tag(
+        name = "Administration",
+        description = "Manage tickets: guest complaints, host damage complaints and host justifications"
+)
 public class AdminController {
 
     private final GuestComplaintService guestComplaintService;
