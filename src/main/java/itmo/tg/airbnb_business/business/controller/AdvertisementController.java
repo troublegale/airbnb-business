@@ -1,5 +1,6 @@
 package itmo.tg.airbnb_business.business.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import itmo.tg.airbnb_business.business.dto.*;
@@ -33,6 +34,7 @@ public class AdvertisementController {
     private final GuestComplaintService guestComplaintService;
 
     @GetMapping
+    @Operation(summary = "Get all advertisements")
     public List<AdvertisementResponseDTO> getAll(
             @RequestParam(defaultValue = "1") @Positive Integer page,
             @RequestParam(defaultValue = "20") @Positive Integer pageSize,
@@ -42,6 +44,7 @@ public class AdvertisementController {
     }
 
     @GetMapping("/my")
+    @Operation(summary = "Get advertisements hosted by you")
     public List<AdvertisementResponseDTO> getOwned(
             @RequestParam(defaultValue = "1") @Positive Integer page,
             @RequestParam(defaultValue = "20") @Positive Integer pageSize,
@@ -50,11 +53,13 @@ public class AdvertisementController {
     }
 
     @GetMapping("/{id}")
+    @Operation(summary = "Get an advertisement by id")
     public AdvertisementResponseDTO get(@PathVariable Long id) {
         return advertisementService.get(id);
     }
 
     @GetMapping("/{id}/complaints")
+    @Operation(summary = "Get complaints for an advertisement")
     public List<GuestComplaintResponseDTO> getComplaintForAdvert(
             @PathVariable Long id,
             @RequestParam(defaultValue = "1") @Positive Integer page,
@@ -64,6 +69,7 @@ public class AdvertisementController {
     }
 
     @GetMapping("/{id}/blocks")
+    @Operation(summary = "Get blocks for an advertisement")
     public List<AdvertisementBlockDTO> getBlocksForAdvert(
             @PathVariable Long id,
             @RequestParam(defaultValue = "1") @Positive Integer page,
@@ -72,6 +78,7 @@ public class AdvertisementController {
     }
 
     @GetMapping("/{id}/bookings")
+    @Operation(summary = "Get bookings for an advertisement")
     public List<BookingResponseDTO> getBookings(
             @PathVariable Long id,
             @RequestParam(defaultValue = "1") @Positive Integer page,
@@ -81,12 +88,14 @@ public class AdvertisementController {
     }
 
     @PostMapping
+    @Operation(summary = "Create an advertisement")
     public AdvertisementResponseDTO create(
             @RequestBody @Valid AdvertisementRequestDTO dto) {
         return advertisementService.create(dto, userService.getCurrentUser());
     }
 
     @PutMapping("/{id}")
+    @Operation(summary = "Update an advertisement")
     public AdvertisementResponseDTO update(
             @PathVariable Long id,
             @RequestBody @Valid AdvertisementRequestDTO dto) {

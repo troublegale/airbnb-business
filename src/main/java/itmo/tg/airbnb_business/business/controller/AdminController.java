@@ -1,5 +1,6 @@
 package itmo.tg.airbnb_business.business.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import itmo.tg.airbnb_business.business.dto.GuestComplaintResponseDTO;
@@ -35,6 +36,7 @@ public class AdminController {
     private final UserService userService;
 
     @GetMapping("/guest-complaints")
+    @Operation(summary = "Get all guest complaints")
     public List<GuestComplaintResponseDTO> getGuestComplaints(
             @RequestParam(defaultValue = "1") @Positive Integer page,
             @RequestParam(defaultValue = "20") @Positive Integer pageSize,
@@ -43,21 +45,25 @@ public class AdminController {
     }
 
     @GetMapping("/guest-complaints/{id}")
+    @Operation(summary = "Get a guest complaint by id")
     public GuestComplaintResponseDTO getGuestComplaint(@PathVariable Long id) {
         return guestComplaintService.get(id);
     }
 
     @PostMapping("/guest-complaints/{id}")
+    @Operation(summary = "Approve a guest complaint")
     public GuestComplaintResponseDTO approveGuestComplaint(@PathVariable Long id) {
         return guestComplaintService.approve(id, userService.getCurrentUser());
     }
 
     @PutMapping("/guest-complaints/{id}")
+    @Operation(summary = "Reject a guest complaint")
     public GuestComplaintResponseDTO rejectGuestComplaint(@PathVariable Long id) {
         return guestComplaintService.reject(id, userService.getCurrentUser());
     }
 
     @GetMapping("/damage-complaints")
+    @Operation(summary = "Get all damage complaints")
     public List<HostDamageComplaintResponseDTO> getDamageComplaints(
             @RequestParam(defaultValue = "1") @Positive Integer page,
             @RequestParam(defaultValue = "20") @Positive Integer pageSize,
@@ -66,21 +72,25 @@ public class AdminController {
     }
 
     @GetMapping("/damage-complaints/{id}")
+    @Operation(summary = "Get a damage complaint by id")
     public HostDamageComplaintResponseDTO getDamageComplaint(@PathVariable Long id) {
         return hostDamageComplaintService.get(id);
     }
 
     @PostMapping("/damage-complaints/{id}")
+    @Operation(summary = "Approve a damage complaint")
     public HostDamageComplaintResponseDTO approveHostDamageComplaint(@PathVariable Long id) {
         return hostDamageComplaintService.approve(id, userService.getCurrentUser());
     }
 
     @PutMapping("/damage-complaints/{id}")
+    @Operation(summary = "Reject a damage complaint")
     public HostDamageComplaintResponseDTO rejectHostDamageComplaint(@PathVariable Long id) {
         return hostDamageComplaintService.reject(id, userService.getCurrentUser());
     }
 
     @GetMapping("/justifications")
+    @Operation(summary = "Get all host justifications")
     public List<HostJustificationResponseDTO> getHostJustifications(
             @RequestParam(defaultValue = "1") @Positive Integer page,
             @RequestParam(defaultValue = "20") @Positive Integer pageSize,
@@ -89,16 +99,19 @@ public class AdminController {
     }
 
     @GetMapping("/justifications/{id}")
+    @Operation(summary = "Get a host justification by id")
     public HostJustificationResponseDTO getHostJustification(@PathVariable Long id) {
         return hostJustificationService.get(id);
     }
 
     @PostMapping("/justifications/{id}")
+    @Operation(summary = "Approve a host justification")
     public HostJustificationResponseDTO approveHostJustification(@PathVariable Long id) {
         return hostJustificationService.approve(id, userService.getCurrentUser());
     }
 
     @PutMapping("/justifications/{id}")
+    @Operation(summary = "Reject a host justification")
     public HostJustificationResponseDTO rejectHostJustification(@PathVariable Long id) {
         return hostJustificationService.reject(id, userService.getCurrentUser());
     }

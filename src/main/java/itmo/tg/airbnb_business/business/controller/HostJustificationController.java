@@ -1,5 +1,6 @@
 package itmo.tg.airbnb_business.business.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import itmo.tg.airbnb_business.business.dto.HostJustificationRequestDTO;
@@ -27,6 +28,7 @@ public class HostJustificationController {
     private final UserService userService;
 
     @GetMapping("/my")
+    @Operation(summary = "Get justifications published by you")
     public List<HostJustificationResponseDTO> getOwned(
             @RequestParam(defaultValue = "1") Integer page,
             @RequestParam(defaultValue = "20") Integer pageSize,
@@ -35,6 +37,7 @@ public class HostJustificationController {
     }
 
     @PostMapping
+    @Operation(summary = "Publish a justification")
     public HostJustificationResponseDTO publish(
             @RequestBody @Valid HostJustificationRequestDTO dto) {
         return hostJustificationService.create(dto, userService.getCurrentUser());

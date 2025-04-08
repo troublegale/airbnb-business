@@ -15,9 +15,9 @@ public class OpenAPIConfig {
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
                 .info(new Info()
-                        .title("Airbnb Business API")
+                        .title("Airbnb Fines & Penalties API")
                         .version("1.0")
-                        .description("JWT authorized documentation"))
+                        .description("BLPS Lab work at ITMO University"))
                 .addSecurityItem(new SecurityRequirement().addList("bearerAuth"))
                 .components(new Components()
                         .addSecuritySchemes("bearerAuth",

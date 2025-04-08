@@ -1,5 +1,6 @@
 package itmo.tg.airbnb_business.business.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import itmo.tg.airbnb_business.business.dto.GuestComplaintRequestDTO;
@@ -31,6 +32,7 @@ public class GuestComplaintController {
     private final UserService userService;
 
     @GetMapping("/my")
+    @Operation(summary = "Get complaints published by you")
     public List<GuestComplaintResponseDTO> getOwned(
             @RequestParam(defaultValue = "1") @Positive Integer page,
             @RequestParam(defaultValue = "20") @Positive Integer pageSize,
@@ -39,6 +41,7 @@ public class GuestComplaintController {
     }
 
     @PostMapping
+    @Operation(summary = "Publish a complaint")
     public GuestComplaintResponseDTO publish(
             @RequestBody @Valid GuestComplaintRequestDTO guestComplaintRequestDTO) {
         return guestComplaintService.create(guestComplaintRequestDTO, userService.getCurrentUser());

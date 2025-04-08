@@ -1,5 +1,6 @@
 package itmo.tg.airbnb_business.business.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import itmo.tg.airbnb_business.business.dto.BookingRequestDTO;
@@ -33,6 +34,7 @@ public class BookingController {
     private final UserService userService;
 
     @GetMapping
+    @Operation(summary = "Get all bookings")
     public List<BookingResponseDTO> getAll(
             @RequestParam(defaultValue = "1") @Positive Integer page,
             @RequestParam(defaultValue = "20") @Positive Integer pageSize,
@@ -41,6 +43,7 @@ public class BookingController {
     }
 
     @GetMapping("/my")
+    @Operation(summary = "Get bookings created by you")
     public List<BookingResponseDTO> getOwned(
             @RequestParam(defaultValue = "1") @Positive Integer page,
             @RequestParam(defaultValue = "20") @Positive Integer pageSize,
@@ -49,17 +52,20 @@ public class BookingController {
     }
 
     @GetMapping("/{id}")
+    @Operation(summary = "Get a booking by id")
     public BookingResponseDTO get(@PathVariable Long id) {
         return bookingService.get(id);
     }
 
     @PostMapping
+    @Operation(summary = "Create a booking")
     public BookingResponseDTO create(
             @RequestBody @Valid BookingRequestDTO dto) {
         return bookingService.create(dto, userService.getCurrentUser());
     }
 
     @DeleteMapping("/{id}")
+    @Operation(summary = "Cancel a booking")
     public String cancel(@PathVariable Long id) {
         return bookingService.cancel(id, userService.getCurrentUser());
     }

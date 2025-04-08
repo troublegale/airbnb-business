@@ -1,5 +1,6 @@
 package itmo.tg.airbnb_business.business.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import itmo.tg.airbnb_business.business.dto.FineDTO;
@@ -29,6 +30,7 @@ public class FineController {
     private final UserService userService;
 
     @GetMapping
+    @Operation(summary = "Get all assigned fines (admin only endpoint)")
     public List<FineDTO> getAll(
             @RequestParam(defaultValue = "1") @Positive Integer page,
             @RequestParam(defaultValue = "20") @Positive Integer pageSize,
@@ -37,6 +39,7 @@ public class FineController {
     }
 
     @GetMapping("/my")
+    @Operation(summary = "Get fines assigned to you")
     public List<FineDTO> getAssigned(
             @RequestParam(defaultValue = "1") @Positive Integer page,
             @RequestParam(defaultValue = "20") @Positive Integer pageSize,
