@@ -4,11 +4,11 @@ import itmo.tg.airbnb_business.business.exception.exceptions.NotAllowedException
 import itmo.tg.airbnb_business.business.exception.exceptions.TicketAlreadyPublishedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.util.NoSuchElementException;
 
@@ -60,6 +60,11 @@ public class GlobalBusinessExceptionHandler {
     @ExceptionHandler(TicketAlreadyPublishedException.class)
     public ResponseEntity<String> handleTicketAlreadyPublishedException(TicketAlreadyPublishedException ex) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<String> handleHttpMessageNotReadableException(HttpMessageNotReadableException ignored) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Bad HTTP request, possibly invalid field values");
     }
 
 }

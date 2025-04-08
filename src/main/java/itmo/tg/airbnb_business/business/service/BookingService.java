@@ -64,6 +64,8 @@ public class BookingService {
     @Transactional
     public BookingResponseDTO create(BookingRequestDTO dto, User guest) {
 
+        verifyDates(dto.getStartDate(), dto.getEndDate());
+
         var advertId = dto.getAdvertisementId();
         var advert = advertisementRepository.findById(advertId).orElseThrow(() ->
                 new NoSuchElementException("Advertisement #" + advertId + " not found"));
@@ -77,17 +79,15 @@ public class BookingService {
             assert !blocks.isEmpty();
             blocks.sort((b1, b2) -> {
                 if (b1.getDateUntil().isAfter(b2.getDateUntil())) {
-                    return 1;
-                } else if (b1.getDateUntil().isBefore(b2.getDateUntil())) {
                     return -1;
+                } else if (b1.getDateUntil().isBefore(b2.getDateUntil())) {
+                    return 1;
                 }
                 return 0;
             });
             var until = blocks.get(0).getDateUntil();
             throw new AdvertisementBlockedException("Advertisement #" + advertId + " is blocked until " + until);
         }
-
-        verifyDates(dto.getStartDate(), dto.getEndDate());
 
         var activeBookings = bookingRepository.findByAdvertisementAndStatus(advert, BookingStatus.ACTIVE);
         activeBookings.forEach(booking ->
@@ -133,9 +133,8 @@ public class BookingService {
     }
 
     private void verifyDates(LocalDate start, LocalDate end) {
-        boolean cond1 = (start.isAfter(LocalDate.now()) || start.isEqual(LocalDate.now()))
-                && end.isAfter(LocalDate.now());
-        boolean cond2 = start.isBefore(end) || end.isEqual(start);
+        boolean cond1 = start.isBefore(end) || start.isEqual(end);
+        boolean cond2 = start.isAfter(LocalDate.now()) || start.isEqual(LocalDate.now());
         if (!cond1 || !cond2) {
             throw new InvalidBookingDatesException("Booking dates are incorrect");
         }
