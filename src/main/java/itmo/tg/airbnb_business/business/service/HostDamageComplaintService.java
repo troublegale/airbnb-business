@@ -13,6 +13,7 @@ import itmo.tg.airbnb_business.business.repository.BookingRepository;
 import itmo.tg.airbnb_business.business.repository.HostDamageComplaintRepository;
 import itmo.tg.airbnb_business.security.model.User;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -24,6 +25,7 @@ import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class HostDamageComplaintService {
 
     private final HostDamageComplaintRepository hostDamageComplaintRepository;
@@ -78,6 +80,7 @@ public class HostDamageComplaintService {
                 .status(TicketStatus.PENDING)
                 .build();
         hostDamageComplaintRepository.save(complaint);
+        log.info("Created host damage complaint #{}", complaint.getId());
         return ModelDTOConverter.convert(complaint);
     }
 
@@ -100,6 +103,7 @@ public class HostDamageComplaintService {
         ticket.setStatus(TicketStatus.APPROVED);
         ticket.setResolver(resolver);
         hostDamageComplaintRepository.save(ticket);
+        log.info("Approved host damage complaint #{}", ticket.getId());
         penaltyService.assignFine(ticket.getCompensationAmount(), ticket.getBooking().getGuest(),
                 ticket.getId(), FineReason.DAMAGE);
         return ModelDTOConverter.convert(ticket);
@@ -115,6 +119,7 @@ public class HostDamageComplaintService {
         ticket.setStatus(TicketStatus.REJECTED);
         ticket.setResolver(resolver);
         hostDamageComplaintRepository.save(ticket);
+        log.info("Rejected host damage complaint #{}", ticket.getId());
         return ModelDTOConverter.convert(ticket);
     }
 

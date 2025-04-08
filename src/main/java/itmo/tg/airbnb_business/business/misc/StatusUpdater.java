@@ -6,6 +6,7 @@ import itmo.tg.airbnb_business.business.repository.AdvertisementBlockRepository;
 import itmo.tg.airbnb_business.business.repository.AdvertisementRepository;
 import itmo.tg.airbnb_business.business.repository.BookingRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
@@ -14,6 +15,7 @@ import java.time.LocalDate;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class StatusUpdater {
 
     private final AdvertisementRepository advertisementRepository;
@@ -24,6 +26,7 @@ public class StatusUpdater {
     public void startStatusMonitoring() {
         var monitorThread = new Thread(this::doMonitoring);
         monitorThread.start();
+        log.info("Started status monitoring thread");
     }
 
     private void doMonitoring() {
@@ -33,6 +36,8 @@ public class StatusUpdater {
     }
 
     private void updateAndWait() {
+
+        log.info("Scanning for expired blocks & bookings");
 
         var blocks = advertisementBlockRepository.findAll();
         for (var block : blocks) {
@@ -54,7 +59,8 @@ public class StatusUpdater {
 
         try {
             Thread.sleep(1000 * 60 * 60);
-        } catch (InterruptedException ignored) {
+        } catch (InterruptedException e) {
+            log.warn("Interrupt in status monitoring thread: {}", e.getMessage());
         }
 
     }

@@ -14,6 +14,7 @@ import itmo.tg.airbnb_business.business.repository.BookingRepository;
 import itmo.tg.airbnb_business.security.model.Role;
 import itmo.tg.airbnb_business.security.model.User;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -25,6 +26,7 @@ import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AdvertisementService {
 
     private final AdvertisementRepository advertisementRepository;
@@ -76,6 +78,7 @@ public class AdvertisementService {
         var advert = ModelDTOConverter.convert(dto, host);
         advert.setStatus(AdvertisementStatus.ACTIVE);
         advertisementRepository.save(advert);
+        log.info("Created advertisement #{}", advert.getId());
         return ModelDTOConverter.convert(advert);
     }
 
@@ -89,6 +92,7 @@ public class AdvertisementService {
             advert.setBookPrice(dto.getBookPrice());
             advert.setPricePerNight(dto.getPricePerNight());
             advertisementRepository.save(advert);
+            log.info("Updated advertisement #{}", advert.getId());
             return ModelDTOConverter.convert(advert);
         }
         throw new NotAllowedException("Not allowed to update advertisement #" + id);

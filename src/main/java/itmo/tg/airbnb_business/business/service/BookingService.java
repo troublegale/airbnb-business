@@ -13,6 +13,7 @@ import itmo.tg.airbnb_business.business.repository.AdvertisementRepository;
 import itmo.tg.airbnb_business.business.repository.BookingRepository;
 import itmo.tg.airbnb_business.security.model.User;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -25,6 +26,7 @@ import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class BookingService {
 
     private final AdvertisementRepository advertisementRepository;
@@ -97,6 +99,7 @@ public class BookingService {
         var booking = ModelDTOConverter.convert(dto, advert, guest);
         booking.setStatus(BookingStatus.ACTIVE);
         bookingRepository.save(booking);
+        log.info("Created booking #{}", booking.getId());
         return ModelDTOConverter.convert(booking);
 
     }
@@ -118,6 +121,7 @@ public class BookingService {
         if (booking.getGuest().equals(user)) {
             booking.setStatus(BookingStatus.CANCELLED);
             bookingRepository.save(booking);
+            log.info("Booking #{} cancelled by guest", booking.getId());
             return "You cancelled booking #" + id + " as a guest";
         }
 
@@ -126,6 +130,7 @@ public class BookingService {
                 LocalDate.now(), booking.getStartDate(), booking.getEndDate(), user);
         booking.setStatus(BookingStatus.CANCELLED);
         bookingRepository.save(booking);
+        log.info("Booking #{} cancelled by host", booking.getId());
         return "You cancelled booking #" + id + " as a host.\n" +
                 "You were assigned with a fine. Refer to /fines/my\n" +
                 "Your advertisement #" + advert.getId() + " is blocked for booking until " + booking.getEndDate();

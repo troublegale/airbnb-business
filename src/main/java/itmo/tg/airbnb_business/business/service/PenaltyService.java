@@ -11,6 +11,7 @@ import itmo.tg.airbnb_business.business.repository.AdvertisementRepository;
 import itmo.tg.airbnb_business.business.repository.FineRepository;
 import itmo.tg.airbnb_business.security.model.User;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +20,7 @@ import java.time.temporal.ChronoUnit;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class PenaltyService {
 
     private final FineRepository fineRepository;
@@ -33,6 +35,7 @@ public class PenaltyService {
                 .dateUntil(endDate)
                 .build();
         advertisementBlockRepository.save(block);
+        log.info("Advertisement #{} received block #{}", advertisement.getId(), block.getId());
         if (advertisement.getStatus() != AdvertisementStatus.BLOCKED) {
             advertisement.setStatus(AdvertisementStatus.BLOCKED);
             advertisementRepository.save(advertisement);
@@ -53,6 +56,7 @@ public class PenaltyService {
                 .fineReason(fineReason)
                 .build();
         fineRepository.save(fine);
+        log.info("User #{} received fine #{}", user.getId(), fine.getId());
     }
 
     @Transactional
@@ -61,14 +65,17 @@ public class PenaltyService {
         var exactBlock = blocks.stream().filter(b -> b.getDateUntil().equals(until)).toList();
         var block = exactBlock.get(0);
         advertisementBlockRepository.delete(block);
+        log.info("Block #{} removed from advertisement #{}", block.getId(), advertisement.getId());
         if (blocks.size() == 1) {
             advertisement.setStatus(AdvertisementStatus.ACTIVE);
             advertisementRepository.save(advertisement);
+            log.info("Advertisement #{} is active", advertisement.getId());
         }
 
         var fine = fineRepository.findByTicketIdAndFineReason(ticketId, fineReason);
         fine.setStatus(FineStatus.CANCELLED);
         fineRepository.save(fine);
+        log.info("Cancelled fine #{}", fine.getId());
     }
 
     private double calculateFineAmount(

@@ -5,6 +5,7 @@ import itmo.tg.airbnb_business.security.dto.AuthResponse;
 import itmo.tg.airbnb_business.security.model.Role;
 import itmo.tg.airbnb_business.security.model.User;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AuthenticationService {
 
     private final UserService userService;
@@ -28,6 +30,7 @@ public class AuthenticationService {
                 .role(Role.ROLE_USER)
                 .build();
         userService.create(user);
+        log.info("User #{} registered in the system", user.getId());
         String token = jwtService.generateToken(user);
         return new AuthResponse(user.getUsername(), token, Role.ROLE_USER);
     }

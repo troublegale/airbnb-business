@@ -14,6 +14,7 @@ import itmo.tg.airbnb_business.business.repository.GuestComplaintRepository;
 import itmo.tg.airbnb_business.business.repository.HostJustificationRepository;
 import itmo.tg.airbnb_business.security.model.User;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -25,6 +26,7 @@ import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class HostJustificationService {
 
     private final HostJustificationRepository hostJustificationRepository;
@@ -78,6 +80,7 @@ public class HostJustificationService {
                 .status(TicketStatus.PENDING)
                 .build();
         hostJustificationRepository.save(justification);
+        log.info("Created host justification #{}", justification.getId());
         return ModelDTOConverter.convert(justification);
     }
 
@@ -105,6 +108,7 @@ public class HostJustificationService {
         ticket.setStatus(TicketStatus.APPROVED);
         ticket.setResolver(resolver);
         hostJustificationRepository.save(ticket);
+        log.info("Approved host justification #{}", ticket.getId());
         var booking = ticket.getComplaint().getBooking();
         var advert = booking.getAdvertisement();
         penaltyService.retractPenalty(advert, booking.getEndDate(), ticket.getComplaint().getId(), FineReason.GUEST);
@@ -121,6 +125,7 @@ public class HostJustificationService {
         ticket.setStatus(TicketStatus.REJECTED);
         ticket.setResolver(resolver);
         hostJustificationRepository.save(ticket);
+        log.info("Rejected host justification #{}", ticket.getId());
         return ModelDTOConverter.convert(ticket);
     }
 

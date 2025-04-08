@@ -17,6 +17,7 @@ import itmo.tg.airbnb_business.business.repository.BookingRepository;
 import itmo.tg.airbnb_business.business.repository.GuestComplaintRepository;
 import itmo.tg.airbnb_business.security.model.User;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -29,6 +30,7 @@ import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class GuestComplaintService {
 
     private final AdvertisementRepository advertisementRepository;
@@ -105,6 +107,7 @@ public class GuestComplaintService {
                 .status(TicketStatus.PENDING)
                 .build();
         guestComplaintRepository.save(complaint);
+        log.info("Created guest complaint #{}", complaint.getId());
         return ModelDTOConverter.convert(complaint);
     }
 
@@ -134,6 +137,7 @@ public class GuestComplaintService {
                 assigningDate, booking.getStartDate(), booking.getEndDate(), advert.getHost());
         booking.setStatus(BookingStatus.CANCELLED);
         bookingRepository.save(booking);
+        log.info("Created guest approved #{}", ticket.getId());
         return ModelDTOConverter.convert(ticket);
     }
 
@@ -147,6 +151,7 @@ public class GuestComplaintService {
         ticket.setStatus(TicketStatus.REJECTED);
         ticket.setResolver(resolver);
         guestComplaintRepository.save(ticket);
+        log.info("Created guest rejected #{}", ticket.getId());
         return ModelDTOConverter.convert(ticket);
     }
 
