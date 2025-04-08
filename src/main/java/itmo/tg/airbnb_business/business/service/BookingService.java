@@ -18,6 +18,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
@@ -63,7 +64,7 @@ public class BookingService {
         return ModelDTOConverter.toBookingDTOList(bookings);
     }
 
-    @Transactional
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
     public BookingResponseDTO create(BookingRequestDTO dto, User guest) {
 
         verifyDates(dto.getStartDate(), dto.getEndDate());
@@ -104,7 +105,7 @@ public class BookingService {
 
     }
 
-    @Transactional
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
     public String cancel(Long id, User user) {
 
         var booking = bookingRepository.findById(id).orElseThrow(() ->

@@ -18,6 +18,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -66,7 +67,7 @@ public class HostDamageComplaintService {
         return ModelDTOConverter.toHostDamageComplaintDTOList(complaints);
     }
 
-    @Transactional
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
     public HostDamageComplaintResponseDTO create(HostDamageComplaintRequestDTO dto, User host) {
         var bookingId = dto.getBookingId();
         var booking = bookingRepository.findById(bookingId).orElseThrow(() ->
@@ -93,7 +94,7 @@ public class HostDamageComplaintService {
         }
     }
 
-    @Transactional
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
     public HostDamageComplaintResponseDTO approve(Long id, User resolver) {
         var ticket = hostDamageComplaintRepository.findById(id).orElseThrow(() ->
                 new NoSuchElementException("Damage complaint #" + id + " not found"));
@@ -109,7 +110,7 @@ public class HostDamageComplaintService {
         return ModelDTOConverter.convert(ticket);
     }
 
-    @Transactional
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
     public HostDamageComplaintResponseDTO reject(Long id, User resolver) {
         var ticket = hostDamageComplaintRepository.findById(id).orElseThrow(() ->
                 new NoSuchElementException("Damage complaint #" + id + " not found"));

@@ -72,8 +72,7 @@ public class AdvertisementService {
         }
         return ModelDTOConverter.toAdvertisementDTOList(adverts);
     }
-
-    @Transactional
+    
     public AdvertisementResponseDTO create(AdvertisementRequestDTO dto, User host) {
         var advert = ModelDTOConverter.convert(dto, host);
         advert.setStatus(AdvertisementStatus.ACTIVE);

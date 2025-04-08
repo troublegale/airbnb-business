@@ -13,6 +13,8 @@ import itmo.tg.airbnb_business.security.model.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
@@ -27,7 +29,7 @@ public class PenaltyService {
     private final AdvertisementRepository advertisementRepository;
     private final AdvertisementBlockRepository advertisementBlockRepository;
 
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRES_NEW, isolation = Isolation.REPEATABLE_READ)
     public void blockAndAssignFine(Advertisement advertisement, Long ticketId, FineReason fineReason,
                                    LocalDate assigningDate, LocalDate startDate, LocalDate endDate, User host) {
         var block = AdvertisementBlock.builder()
@@ -46,7 +48,7 @@ public class PenaltyService {
         assignFine(amount, host, ticketId, fineReason);
     }
 
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRES_NEW, isolation = Isolation.REPEATABLE_READ)
     public void assignFine(Double amount, User user, Long ticketId, FineReason fineReason) {
         var fine = Fine.builder()
                 .user(user)
@@ -59,7 +61,7 @@ public class PenaltyService {
         log.info("User #{} received fine #{}", user.getId(), fine.getId());
     }
 
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRES_NEW, isolation = Isolation.REPEATABLE_READ)
     public void retractPenalty(Advertisement advertisement, LocalDate until, Long ticketId, FineReason fineReason) {
         var blocks = advertisementBlockRepository.findByAdvertisement(advertisement);
         var exactBlock = blocks.stream().filter(b -> b.getDateUntil().equals(until)).toList();

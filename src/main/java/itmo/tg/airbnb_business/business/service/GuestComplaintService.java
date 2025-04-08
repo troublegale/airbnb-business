@@ -22,6 +22,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
@@ -89,7 +90,7 @@ public class GuestComplaintService {
         return ModelDTOConverter.toGuestComplaintDTOList(complaints);
     }
 
-    @Transactional
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
     public GuestComplaintResponseDTO create(GuestComplaintRequestDTO dto, User guest) {
         var bookingId = dto.getBookingId();
         var booking = bookingRepository.findById(bookingId).orElseThrow(() ->
@@ -120,7 +121,7 @@ public class GuestComplaintService {
         }
     }
 
-    @Transactional
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
     public GuestComplaintResponseDTO approve(Long id, User resolver) {
         var ticket = guestComplaintRepository.findById(id).orElseThrow(() ->
                 new NoSuchElementException("Guest complaint #" + id + " not found"));
@@ -141,7 +142,7 @@ public class GuestComplaintService {
         return ModelDTOConverter.convert(ticket);
     }
 
-    @Transactional
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
     public GuestComplaintResponseDTO reject(Long id, User resolver) {
         var ticket = guestComplaintRepository.findById(id).orElseThrow(() ->
                 new NoSuchElementException("Guest complaint #" + id + " not found"));

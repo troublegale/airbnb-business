@@ -19,6 +19,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -67,7 +68,7 @@ public class HostJustificationService {
         return ModelDTOConverter.toHostJustificationDTOList(justifications);
     }
 
-    @Transactional
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
     public HostJustificationResponseDTO create(HostJustificationRequestDTO dto, User host) {
         var complaintId = dto.getGuestComplaintId();
         var complaint = guestComplaintRepository.findById(complaintId).orElseThrow(() ->
@@ -98,7 +99,7 @@ public class HostJustificationService {
         }
     }
 
-    @Transactional
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
     public HostJustificationResponseDTO approve(Long id, User resolver) {
         var ticket = hostJustificationRepository.findById(id).orElseThrow(() ->
                 new NoSuchElementException("Damage complaint #" + id + " not found"));
@@ -115,7 +116,7 @@ public class HostJustificationService {
         return ModelDTOConverter.convert(ticket);
     }
 
-    @Transactional
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
     public HostJustificationResponseDTO reject(Long id, User resolver) {
         var ticket = hostJustificationRepository.findById(id).orElseThrow(() ->
                 new NoSuchElementException("Damage complaint #" + id + " not found"));
