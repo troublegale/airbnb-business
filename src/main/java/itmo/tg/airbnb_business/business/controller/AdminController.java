@@ -56,7 +56,7 @@ public class AdminController {
         return guestComplaintService.approve(id, userService.getCurrentUser());
     }
 
-    @PutMapping("/guest-complaints/{id}")
+    @DeleteMapping("/guest-complaints/{id}")
     @Operation(summary = "Reject a guest complaint")
     public GuestComplaintResponseDTO rejectGuestComplaint(@PathVariable Long id) {
         return guestComplaintService.reject(id, userService.getCurrentUser());
@@ -83,7 +83,7 @@ public class AdminController {
         return hostDamageComplaintService.approve(id, userService.getCurrentUser());
     }
 
-    @PutMapping("/damage-complaints/{id}")
+    @DeleteMapping("/damage-complaints/{id}")
     @Operation(summary = "Reject a damage complaint")
     public HostDamageComplaintResponseDTO rejectHostDamageComplaint(@PathVariable Long id) {
         return hostDamageComplaintService.reject(id, userService.getCurrentUser());
@@ -110,7 +110,7 @@ public class AdminController {
         return hostJustificationService.approve(id, userService.getCurrentUser());
     }
 
-    @PutMapping("/justifications/{id}")
+    @DeleteMapping("/justifications/{id}")
     @Operation(summary = "Reject a host justification")
     public HostJustificationResponseDTO rejectHostJustification(@PathVariable Long id) {
         return hostJustificationService.reject(id, userService.getCurrentUser());
